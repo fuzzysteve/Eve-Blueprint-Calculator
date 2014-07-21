@@ -1,0 +1,8 @@
+{
+    "require":{
+        "fuzzysteve/eve-prices":"dev-master",
+        "predis/predis": "*",
+        "fuzzysteve/eve-blueprint-library": "dev-master",
+        "smarty/smarty": "3.1.*"
+   }
+}
