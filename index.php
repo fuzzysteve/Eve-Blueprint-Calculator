@@ -2,17 +2,15 @@
 require_once 'includes/head.php';
 
 
-$sql='select id,name from evesupport.dbversions where id>0 order by id desc';
+$sql='select regionname,regionid from mapRegions where regionid<=10000069 order by regionname asc';
 
 $stmt = $dbh->prepare($sql);
-
 $stmt->execute();
-
-$databases=array();
+$regions=array();
 while ($row = $stmt->fetchObject()) {
-    $databases[$row->id]=$row->name;
+    $regions[$row->regionid]=$row->regionname;
 }
 
-$smarty->assign('databases', $databases);
+$smarty->assign('regions', $regions);
 
-$smarty->display('index.tpl');
+$smarty->display('display.tpl');

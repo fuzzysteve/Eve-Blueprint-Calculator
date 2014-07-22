@@ -2,11 +2,30 @@ function populateTables(blueprintJson)
 {
     blueprintData=blueprintJson;
     materials=$('#materialsTable').DataTable();
-    
+    materials.rows().remove(); 
     for (materialid in blueprintData['activityMaterials'][1]) {
         material=blueprintData['activityMaterials'][1][materialid];
         var newrow=materials.row.add([material.typeid,material.name,material.quantity,0,0,0,0,0]).draw().node();
         $(newrow).attr('id', 'material-'+material.typeid);
+    }
+    $("#collapseOne").collapse('show');
+    $("#nameDiv").text(blueprintData.blueprintDetails.productTypeName);
+
+    skills=$("#skillsTable").DataTable();
+    skills.rows().remove();
+    for (activity in blueprintData.blueprintSkills) {
+        for (skill in blueprintData.blueprintSkills[activity]) {
+            skills.row.add([activityNames[activity],blueprintData.blueprintSkills[activity][skill].name,blueprintData.blueprintSkills[activity][skill].level]);
+        }
+    }
+    skills.draw();
+
+    if (blueprintData.blueprintDetails.techLevel==2) {
+        $("#invention_div").show();
+        $("#inventioncosttr").show();
+    } else {
+        $("#invention_div").hide();
+        $("#inventioncosttr").hide();
     }
     generateMaterialList();
     loadPrices();
@@ -36,10 +55,11 @@ function generateMaterialList()
 function populatePrices(pricejson) {
     priceData=pricejson;
     prices=$('#priceTable').DataTable();
+    prices.rows().remove();
 
     for (materialid in materialList) {
         typeid=materialList[materialid];
-        prices.row.add([materialNames[typeid],priceData[typeid].sell,priceData[typeid].buy,priceData[typeid].adjusted]);
+        prices.row.add([materialNames[typeid],$.number(priceData[typeid].sell,2),$.number(priceData[typeid].buy,2),$.number(priceData[typeid].adjusted,2)]);
     }
     prices.draw();
     loadIndexes();
@@ -56,6 +76,8 @@ function loadIndexes()
     if (currentindex!=$('#systemName').val()) {
         queryurl="https://www.fuzzwork.co.uk/blueprint/api/costIndexes.php?solarsystem="+$('#systemName').val();
         $.getJSON(queryurl,function(data){populateIndexes(data);});
+    } else {
+        runNumbers();
     }
 }
 
@@ -67,8 +89,7 @@ function loadPrices()
 
 function loadBlueprint(blueprint)
 {
-    blueprintid=blueprint.typeid
-    queryurl="https://www.fuzzwork.co.uk/blueprint/api/blueprint.php?typeid="+blueprintid;
+    queryurl="https://www.fuzzwork.co.uk/blueprint/api/blueprint.php?typeid="+blueprint;
     $.getJSON(queryurl,function(data){populateTables(data);});
 }
 
@@ -78,6 +99,7 @@ function runNumbers()
     materials=$('#materialsTable').DataTable();
     totalPrice=0;
     runCost=0;
+    taxmultiplier=(taxRate/100)+1;
     for (materialid in blueprintData['activityMaterials'][1]) {
         material=blueprintData['activityMaterials'][1][materialid];
         reducedquantity=material.quantity*(1-(ml/100))*facility;
@@ -93,19 +115,19 @@ function runNumbers()
             $.number(priceData[material.typeid].sell*jobquantity,2)
             ]);
         totalPrice=totalPrice+priceData[material.typeid].sell*jobquantity;
-        runCost=priceData[material.typeid].adjusted*material.quantity*runs;
+        runCost=runCost+(priceData[material.typeid].adjusted*material.quantity*runs);
     }
     $('#jobCost').number(totalPrice,2);
     $('#adjustedCost').number(runCost,2);
-    $('#installCost').number(runCost*indexData.costIndexes["1"],2);
-
+    $('#installCost').number((runCost*indexData.costIndexes["1"])*taxmultiplier,2);
+    profitNumber=(((priceData[blueprintData.blueprintDetails.productTypeID].sell*runs)-totalPrice)-(runCost*indexData.costIndexes["1"]*taxmultiplier));
+    $('#profit').number(profitNumber,2);
     materials.draw();
 }
 
 function updatePrices()
 {
     prices=$('#priceTable').DataTable();
-    prices.rows().remove();
     regionid=$('#priceregion').val();
     loadPrices();
 
@@ -121,19 +143,22 @@ $.urlParam = function(name){
 }
 
 
-ml=0
-me=0
-pl=0
-industry=0
-research=0
-metallurgy=0
+var ml=0
+var me=0
+var pl=0
+var industry=0
+var research=0
+var metallurgy=0
 var blueprintData;
 var materialList;
 var materialNames;
 var priceData;
 var indexData;
 var runCost;
-currentindex=0;
-runs=1;
-facility=1;
-regionid=10000002;
+var currentindex=0;
+var runs=1;
+var facility=1;
+var regionid=10000002;
+var taxRate=0;
+var profitNumber=0;
+var activityNames={'1':'Manufacturing','3':'TE Research','4':'ME research','5':'Copying','7':'Reverse Engineering','8':'Invention'};

@@ -30,10 +30,43 @@ $(document).ready(function() {
         "columnDefs": [{
             "targets": [ 2,3 ],
             "visible": false,
-            "searchable": false
-            }]
+            "searchable": false,
+            className: "textright"
+            },
+            {
+            "targets": [ 1 ],
+            className: "textright"
+            }
+            ]
         });
 
+    skills=$("#skillsTable").dataTable({
+         "bPaginate": false,
+         "bFilter": false,
+         "bInfo": false,
+         "ordering": false,
+         "bAutoWidth": true,
+         "bSortClasses": false,
+         "columnDefs": [{
+                "targets": [ 0 ],
+                "visible": false
+                }],
+         "drawCallback": function ( settings ) {
+             var api = this.api();
+             var rows = api.rows( {page:'current'} ).nodes();
+             var last=null;
+ 
+             api.column(0, {page:'current'} ).data().each( function ( group, i ) {
+                 if ( last !== group ) {
+                     $(rows).eq( i ).before(
+                         '<tr class="group"><th colspan="3">'+group+'</th></tr>'
+                     );
+ 
+                     last = group;
+                 }
+             } );
+           }
+         });
 
     $(function() {
                 $( "#mlslider" ).slider({
@@ -181,6 +214,12 @@ $(document).ready(function() {
         var spinner= $("#runs").spinner({min:1,spin: function(event,ui) {runs=ui.value;runNumbers();},change: function(event,ui) {runs=$("#runs").val();runNumbers();}});
         });
     $(function() {
+
+$(function() {
+        var spinner= $("#taxRate").spinner({min:0,max:100,step: 0.01,spin: function(event,ui) {taxRate=ui.value;runNumbers();},change: function(event,ui) {taxRate=$("#taxRate").val();runNumbers();}});
+        });
+
+
     $("#systemName").autocomplete({source:"/blueprint/api/systemName.php",minLength:2,change: function( event, ui ) {loadIndexes();},select: function( event, ui ) { $("systemName").val(ui.item.value);loadIndexes();}});
         });
 });
