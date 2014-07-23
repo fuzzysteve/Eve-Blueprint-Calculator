@@ -24,15 +24,16 @@ $(document).ready(function() {
                 <label for="facility">Manufacturing Facility</label>
                 <select name="facility" id="facility" onchange='facility=parseFloat($("#facility").val());runNumbers();'>
                     <option value="1">Station</option>
-                    <option value="0.98">Assembly Array</option>
-                    <option value="0.90">Thukker Component Array</option>
-                    <option value="1.05">Rapid Assembly Array</option>
+                    <option value="2">Assembly Array</option>
+                    <option value="3">Thukker Component Array</option>
+                    <option value="4">Rapid Assembly Array</option>
                 </select>
                 <label for="rFacility">Research Facility</label>
-                <select name="rfacility" id="rfacility" onchange='rfacility=$("#rfacility").val();runNumbers();'>
+                <select name="rfacility" id="rfacility" onchange='rfacility=$("#rfacility").val();runTimeNumbers();'>
                     <option>Station</option>
-                    <option>POS Lab</option>
-                    <option>Advanced POS Lab</option>
+                    <option>Mobile Lab</option>
+                    <option>Hyasyoda Mobile Lab TE</option>
+                    <option>Design Lab</option>
                 </select>
 <br>
                 <label for="taxRate">Facility Tax Rate</label><input type=text value=0 name="taxRate" id="taxRate">
@@ -48,11 +49,22 @@ $(document).ready(function() {
         <div class="panel-heading"><h1 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#materials_div" href="#collapseOne">Materials</a></h1></div>
         <div id="collapseOne" class="panel-collapse collapse ">
             <div class="panel-body">
-                <label for="ml">Blueprint ME</label>
-                <input type=text value=0 id="ml" size=3 style='width:3em;margin-right:1em;margin-left:1em'>
-                <label for="runs">Runs</label><input type=text value=1 name='runs' id='runs'><br>
-                <div id="mlslider" style='width:100px;display:inline-block;height:0.5em'></div><br>
-                <input type=button value="Update ML/ME" onclick="runNumbers();">
+            <div class=row>
+                <div class="col-md-4">
+                    <label for="me">Blueprint ME</label>
+                    <input type=text value=0 id="me" size=3 style='width:3em;margin-right:1em;margin-left:1em'>
+                    <div id="meslider" style='width:100px;display:inline-block;height:0.5em'></div>
+                </div>
+                <div class="col-md-4">
+                    <label for="te">Blueprint TE</label>
+                    <input type=text value=0 id="te" size=3 style='width:3em;margin-right:1em;margin-left:1em'>
+                    <div id="teslider" style='width:100px;display:inline-block;height:0.5em'></div>
+                </div>
+                <div class="col-md-4">
+                    <label for="runs">Runs</label><input type=text value=1 name='runs' id='runs'><br>
+                    <input type=button value="Update ME/TE" onclick="runNumbers();">
+                </div>
+            </div>
                 <table border=1 id="materialsTable" class="table table-striped table-bordered">
                     <thead>
                         <tr>
@@ -72,10 +84,57 @@ $(document).ready(function() {
                     <tr><th colspan=7>Job Material Cost</th><td id='jobCost' class='text-right'></td></tr>
                     <tr><th colspan=7>Job Base Price</th><td id='adjustedCost' class='text-right'></td></tr>
                     <tr><th colspan=7>Install Price</th><td id='installCost' class='text-right'></td></tr>
+                    <tr><th colspan=7>Build Time</th><td id='buildTime' class='text-right'></td></tr>
                     <tr id="inventioncosttr"><th colspan=7>Invention Cost</th><td id='inventionCost' class='text-right'></td></tr>
                     <tr><th colspan=7>Profit (Sell - Material - Install)</th><td id='profit' class='text-right'></td></tr>
                     </tfoot>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="player_skills_div">
+    <div id="playser_skills_div_panel" class="panel panel-default">
+        <div class="panel-heading"><h1 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#skills_div" href="#collapsePlayerSkills">Player Skills</a></h1></div>
+        <div id="collapsePlayerSkills" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class=row>
+                    <div class="col-md-3">
+                        <label for="industry">Industry</label>
+                    </div><div class="col-md-3">
+                        <select name='industry'  id='industry' onchange='industry=parseInt($("#industry").val());runNumbers();'>
+                        <option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="aindustry">Advanced Industry</label>
+                    </div><div class="col-md-3">
+                        <select name='aindustry' id='aindustry' onchange='aindustry=parseInt($("#aindustry").val());runNumbers();'>
+                         <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select>
+                    </div>
+                </div>
+                <div class=row>
+                    <div class="col-md-3">
+                        <label for="research">Research</label>
+                    </div><div class="col-md-3">
+                        <select name='research' id='research' onchange='research=parseInt($("#research").val());runTimeNumbers();'>
+                         <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="metallurgy">Metallurgy</label>
+                    </div><div class="col-md-3">
+                        <select name='metallurgy' id='metallurgy' onchange='metallurgy=parseInt($("#metallurgy").val());runTimeNumbers();'>
+                        <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select>
+                    </div>
+                </div>
+                <div class=row>
+                    <div class="col-md-3">
+                        <label for="science">Science</label>
+                    </div><div class="col-md-3">
+                        <select name='science' id='science' onchange='science=parseInt($("science").val());runTimeNumbers();'>
+                        <option>1</option><option>2</option><option>3</option><option>4</option><option selected>5</option></select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -110,7 +169,33 @@ $(document).ready(function() {
         <div class="panel-heading"><h1 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#time_div" href="#collapseTime">Time Calculations</a></h1></div>
         <div id="collapseTime" class="panel-collapse collapse">
             <div class="panel-body">
-I'm an Time div. Steve needs to write my math.
+                <div class=row>
+                    <div class="col-md-6">
+                        <p><label for="meresearch">ME Research</label>
+                        <input type="text" id="meresearch" readonly style="border:0; color:#f6931f; font-weight:bold;"></p>
+                        <div id="meresearchslider"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-bordered">
+                            <tr><th>Research Time</th><td id=metime class=text-right></td></tr>
+                            <tr><th>Research Cost</th><td id=mecost class=text-right></td></tr>
+                        </table>
+                    </div>
+                </div>
+                <hr>
+                <div class=row>
+                    <div class="col-md-6">
+                        <p><label for="teresearch">TE Research</label>
+                        <input type="text" id="teresearch" readonly style="border:0; color:#f6931f; font-weight:bold;"></p>
+                        <div id="teresearchslider"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-bordered">
+                            <tr><th>Research Time</th><td id=tetime class=text-right></td></tr>
+                            <tr><th>Research Cost</th><td id=tecost class=text-right></td></tr>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
 </div>

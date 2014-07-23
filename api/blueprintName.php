@@ -14,7 +14,7 @@ and activityID=1
 AND invTypes.published=1 
 AND typename LIKE ? 
 ORDER BY typename 
-LIMIT 5
+LIMIT 15
 EOS;
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);

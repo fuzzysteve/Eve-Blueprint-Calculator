@@ -95,15 +95,16 @@ function loadBlueprint(blueprint)
 
 function runNumbers()
 {
-    ml=parseInt($('#ml').val());
+    me=parseInt($('#me').val());
+    te=parseInt($('#te').val());
     materials=$('#materialsTable').DataTable();
     totalPrice=0;
     runCost=0;
     taxmultiplier=(taxRate/100)+1;
     for (materialid in blueprintData['activityMaterials'][1]) {
         material=blueprintData['activityMaterials'][1][materialid];
-        reducedquantity=material.quantity*(1-(ml/100))*facility;
-        jobquantity=Math.max(runs,Math.ceil((material.quantity*(1-(ml/100))*facility)*runs));
+        reducedquantity=material.quantity*(1-(me/100))*facilityme[facility];
+        jobquantity=Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme[facility])*runs));
         materials.row($('#material-'+material.typeid)).data([
             material.typeid,
             material.name,
@@ -120,7 +121,9 @@ function runNumbers()
     $('#jobCost').number(totalPrice,2);
     $('#adjustedCost').number(runCost,2);
     $('#installCost').number((runCost*indexData.costIndexes["1"])*taxmultiplier,2);
-    profitNumber=(((priceData[blueprintData.blueprintDetails.productTypeID].sell*runs)-totalPrice)-(runCost*indexData.costIndexes["1"]*taxmultiplier));
+    profitNumber=(((priceData[blueprintData.blueprintDetails.productTypeID].sell*blueprintData.blueprintDetails.productQuantity*runs)-totalPrice)-(runCost*indexData.costIndexes["1"]*taxmultiplier));
+    buildTime=blueprintData.blueprintDetails.times[1]*(1-(te/100))*(1-((industry*4)/100))*(1-((aindustry)/100))*facilityte[facility]*runs;
+    $('#buildTime').text(String(buildTime).toHHMMSS());
     $('#profit').number(profitNumber,2);
     materials.draw();
 }
@@ -133,6 +136,33 @@ function updatePrices()
 
 }
 
+function runTimeNumbers()
+{
+    meRes=$('#meresearch').val().split('-');
+    teRes=$('#teresearch').val().split('-');
+    meRes[0]=parseInt(meRes[0]);
+    meRes[1]=parseInt(meRes[1]);
+    teRes[0]=parseInt(teRes[0]);
+    teRes[1]=parseInt(teRes[1]);
+    metime=0;
+    mecost=0
+    tetime=0;
+    tecost=0;
+    for(i=meRes[0];i<meRes[1];i++) {
+        metime=metime+(researchMultiplier[i]*blueprintData.blueprintDetails.times[4]);
+        mecost=mecost+(researchMultiplier[i]*runCost*0.02);
+    }
+    for(i=teRes[0];i<teRes[1];i=i+2) {
+        tetime=tetime+(researchMultiplier[i/2]*blueprintData.blueprintDetails.times[3]);
+        tecost=tecost+(researchMultiplier[i/2]*runCost*0.02);
+    }
+
+    $('#metime').text(String(metime*rfacilityme[rfacility]*(1-(metallurgy*5/100))).toHHMMSS());
+    $('#tetime').text(String(tetime*rfacilityte[rfacility]*(1-(research*5/100))).toHHMMSS());
+    $('#mecost').number(mecost,2);
+    $('#tecost').number(tecost,2);
+}
+
 $.urlParam = function(name){
     var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
     if (results==null) {
@@ -143,12 +173,14 @@ $.urlParam = function(name){
 }
 
 
-var ml=0
-var me=0
-var pl=0
-var industry=0
-var research=0
-var metallurgy=0
+var te=0;
+var me=0;
+var teamTe=0
+var teamMe=0
+var industry=5;
+var aindustry=5;
+var research=5;
+var metallurgy=5;
 var blueprintData;
 var materialList;
 var materialNames;
@@ -158,7 +190,13 @@ var runCost;
 var currentindex=0;
 var runs=1;
 var facility=1;
+var rfacility=1;
 var regionid=10000002;
 var taxRate=0;
 var profitNumber=0;
 var activityNames={'1':'Manufacturing','3':'TE Research','4':'ME research','5':'Copying','7':'Reverse Engineering','8':'Invention'};
+var facilityme={'1':1,'2':0.98,'3':0.9,'4':1.05};
+var facilityte={'1':1,'2':0.75,'3':0.75,'4':0.65};
+var rfacilityme={'1':1,'2':0.7,'3':0.65,'4':Infinity}
+var rfacilityte={'1':1,'2':0.7,'3':0.65,'4':Infinity}
+var researchMultiplier=[1,29/21,23/7,39/5,278/15,928/21,2200/21,5251/21,4163/7,29660/21];

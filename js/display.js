@@ -69,25 +69,25 @@ $(document).ready(function() {
          });
 
     $(function() {
-                $( "#mlslider" ).slider({
-                        value:ml,
+                $( "#meslider" ).slider({
+                        value:me,
                         min: 0,
                         max: 10,
                         step: 1,
                         slide: function( event, ui ) {
-                                $( "#ml" ).val( ui.value );
+                                $( "#me" ).val( ui.value );
                                 runNumbers()
                         }
                 });
-                $( "#ml" ).val( $( "#mlslider" ).slider( "value" ) );
+                $( "#me" ).val( $( "#meslider" ).slider( "value" ) );
     });
 
     $(function() {
                 $( "#teslider" ).slider({
-                        value:pl,
-                        min: -6,
-                        max: 500,
-                        step: 1,
+                        value:te,
+                        min: 0,
+                        max: 20,
+                        step: 2,
                         slide: function( event, ui ) {
                                 $( "#te" ).val( ui.value );
                                 runNumbers()
@@ -95,47 +95,35 @@ $(document).ready(function() {
                 });
                 $( "#te" ).val( $( "#teslider" ).slider( "value" ) );
     });
-
+    
     $(function() {
-                $( "#indslider" ).slider({
-                        value:industry,
-                        min: 1,
-                        max: 5,
-                        step: 1,
+                $( "#teresearchslider" ).slider({
+                        values:[0,0],
+                        min: 0,
+                        max: 20,
+                        step: 2,
+                        range:true,
                         slide: function( event, ui ) {
-                                $( "#ind" ).val( ui.value );
-                                runNumbers()
+                                $( "#teresearch" ).val( ui.values[0]+'-'+ui.values[1] );
+                                runTimeNumbers()
                         }
                 });
-                $( "#ind" ).val( $( "#indslider" ).slider( "value" ) );
+                $( "#teresearch" ).val( '0-0' );
     });
 
     $(function() {
-                $( "#metslider" ).slider({
-                        value:metallurgy,
+                $( "#meresearchslider" ).slider({
+                        values:[0,0],
                         min: 0,
-                        max: 5,
+                        max: 10,
                         step: 1,
+                        range:true,
                         slide: function( event, ui ) {
-                                $( "#met" ).val( ui.value );
-                                runNumbers()
+                                $( "#meresearch" ).val( ui.values[0]+'-'+ui.values[1] );
+                                runTimeNumbers()
                         }
                 });
-                $( "#met" ).val( $( "#metslider" ).slider( "value" ) );
-    });
-
-    $(function() {
-                $( "#researchslider" ).slider({
-                        value:research,
-                        min: 0,
-                        max: 5,
-                        step: 1,
-                        slide: function( event, ui ) {
-                                $( "#research" ).val( ui.value );
-                                runNumbers()
-                        }
-                });
-                $( "#research" ).val( $( "#researchslider" ).slider( "value" ) );
+                $( "#meresearch" ).val( '0-0' );
     });
 
 
@@ -214,12 +202,24 @@ $(document).ready(function() {
         var spinner= $("#runs").spinner({min:1,spin: function(event,ui) {runs=ui.value;runNumbers();},change: function(event,ui) {runs=$("#runs").val();runNumbers();}});
         });
     $(function() {
-
-$(function() {
+        $("#systemName").autocomplete({source:"/blueprint/api/systemName.php",minLength:2,change: function( event, ui ) {loadIndexes();},select: function( event, ui ) { $("systemName").val(ui.item.value);loadIndexes();}});
+        });
+    $(function() {
         var spinner= $("#taxRate").spinner({min:0,max:100,step: 0.01,spin: function(event,ui) {taxRate=ui.value;runNumbers();},change: function(event,ui) {taxRate=$("#taxRate").val();runNumbers();}});
         });
-
-
-    $("#systemName").autocomplete({source:"/blueprint/api/systemName.php",minLength:2,change: function( event, ui ) {loadIndexes();},select: function( event, ui ) { $("systemName").val(ui.item.value);loadIndexes();}});
-        });
 });
+
+String.prototype.toHHMMSS = function () {
+    var sec_num = parseInt(this, 10); // don't forget the second param
+    var days   = Math.floor(sec_num / 86400);
+    var hours   = Math.floor((sec_num -(days*86400)) / 3600);
+    var minutes = Math.floor((sec_num - ((days*86400) + (hours * 3600))) / 60);
+    var seconds = (sec_num - ((days*86400) + (hours * 3600))) - (minutes * 60);
+    daystring='';
+    if (days>0) { daystring= days+ ' Days ' }
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    var time    = daystring+hours+':'+minutes+':'+seconds;
+    return time;
+}

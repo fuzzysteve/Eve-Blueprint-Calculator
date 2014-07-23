@@ -45,4 +45,4 @@ $returnarray['activityMaterials']=$blueprint->activityMaterials();
 $returnarray['metaVersions']=$blueprint->metaVersions();
 
 
-echo json_encode($returnarray);
+echo json_encode($returnarray, JSON_NUMERIC_CHECK);
