@@ -68,6 +68,12 @@ function populatePrices(pricejson) {
 function populateIndexes(indexJson) {
     indexData=indexJson;
     currentindex=$('#systemName').val();
+    cit=$("#costIndexTable").DataTable();
+    cit.rows().remove();
+    for (activity in indexJson.costIndexes) {
+        cit.row.add([activityNames[activity],$.number(indexJson.costIndexes[activity],5)]);
+    }
+    cit.draw();
     runNumbers();
 }
 
@@ -89,6 +95,7 @@ function loadPrices()
 
 function loadBlueprint(blueprint)
 {
+    $("#mainbody").show();
     queryurl="https://www.fuzzwork.co.uk/blueprint/api/blueprint.php?typeid="+blueprint;
     $.getJSON(queryurl,function(data){populateTables(data);});
 }

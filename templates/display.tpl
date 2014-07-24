@@ -14,6 +14,7 @@ $(document).ready(function() {
 {/literal}
 {/block}
 {block name=body}
+<div id="mainbody">
 <div id="name_div"><h1 id='nameDiv'></h1></div>
 <div id="link_div"></div>
 <div id="facility_div">
@@ -211,6 +212,28 @@ I'm an invention div. Steve needs to write my math.
     </div>
 </div>
 
+<div id="costindex_div">
+    <div id="costindex_div_panel" class="panel panel-default">
+        <div class="panel-heading"><h1 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#costinted_div" href="#collapseCostIndex">Cost Indexes</a></h1></div>
+        <div id="collapseCostIndex" class="panel-collapse collapse">
+            <div class="panel-body">
+                <table border=1 id="costIndexTable" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Activity</th>
+                            <th>Index Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <div id="prices" style="position:absolute;<? echo $pricepos;?>" class="panel panel-info">
     <div id="priceheader" class="panel-heading"><span style="float:right" class="glyphicon glyphicon-chevron-down" data-toggle="collapse" data-target="#pricedetail"></span>Prices</div>
         <div id="pricedetail" class="panel-body collapse">
@@ -235,6 +258,8 @@ I'm an invention div. Steve needs to write my math.
                       </div>
             </div>
     </div>
+</div>
+</div>
     <div id="blueprintSelection" class="panel panel-default">
         <div class="panel-heading"><h1 class="panel-title">Blueprint Selection</h1></div>
         <div class="panel-body">
