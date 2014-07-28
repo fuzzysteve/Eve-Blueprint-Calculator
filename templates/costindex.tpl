@@ -6,7 +6,7 @@
 {/block}
 {block name=body}
 <div class="row">
-<div class="col-md-6">
+<div class="col-md-4">
 <p>Just select a region</p>
 <select id="region" onchange="loadRegionIndexes();">
 <option value=0>Select a region</option>
@@ -15,7 +15,7 @@
 {/foreach}
 </select>
 </div>
-<div class="col-md-6">
+<div class="col-md-4">
 <p>Or pick a system, and a number of jumps</p>
 <label for="systemname">System name</label><input type=text placeholder='System Name' id="systemname">
 <select id="jumps">
@@ -31,6 +31,11 @@
 <option>10</option>
 </select><br>
 <input type="button" onclick="loadRangeIndexes();" value="Load Range">
+</div>
+<div class="col-md-4">
+<p>These only work, when you have them set before loading (WIP)</p>
+<label for="factory">Require Factory</label><input type="checkbox" id="factory"><br>
+<label for="lab">Require Lab</label><input type="checkbox" id="lab"><br>
 </div>
 </div>
 <hr>

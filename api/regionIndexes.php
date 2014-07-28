@@ -2,21 +2,51 @@
 
 require_once('../includes/db.inc.php');
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+
+$servicesql='';
+$servicewhere='';
+if (isset($_REQUEST['lab']) or isset($_REQUEST['factory'])) {
+    
+    $servicesql=' 
+    JOIN staStations ON mss.solarsystemid=staStations.solarsystemid
+    JOIN staOperationServices ON  (staStations.operationID=staOperationServices.operationID)
+    ';
+
+    if (isset($_REQUEST['lab']) and isset($_REQUEST['factory'])) {
+        $servicewhere=' and serviceID in (8192,16384) ';
+    } elseif (isset($_REQUEST['lab'])) {
+        $servicewhere=' and serviceID in (16384) ';
+    } elseif (isset($_REQUEST['factory'])) {
+        $servicewhere=' and serviceID in (8192) ';
+
+    }
+}
+
+
 if (isset($_REQUEST['region'])) {
     $region=$_REQUEST['region'];
     $param=$region;
     $sql='SELECT regionID id FROM mapRegions WHERE regionid=?';
-    $sql2="SELECT ci.solarSystemID,solarSystemName,activityID,costIndex,security,0
+    $sql2="SELECT ci.solarSystemID,solarSystemName,activityID,costIndex,mss.security,0
     FROM evesupport.costIndex ci 
     JOIN mapSolarSystems mss on (ci.solarSystemID=mss.solarSystemID) 
-    WHERE regionID=?";
+    $servicesql
+    WHERE regionID=?
+    $servicewhere
+    ";
 } elseif (isset($_REQUEST['system']) and isset($_REQUEST['jumps'])) {
     $systemname=$_REQUEST['system'];
     $param=$systemname;
     $jumps=$_REQUEST['jumps'];
     $sql="SELECT solarSystemID id from mapSolarSystems where solarsystemname=?";
     $sql2="
-SELECT ci.solarSystemID,solarSystemName,activityID,costIndex,security,length FROM evesupport.costIndex ci JOIN mapSolarSystems mss on (ci.solarSystemID=mss.solarSystemID) JOIN evesupport.routefullsmall on ((mss.solarSystemID=end and start=:system) and length<=:length)
+SELECT ci.solarSystemID,solarSystemName,activityID,costIndex,mss.security,length 
+FROM evesupport.costIndex ci 
+JOIN mapSolarSystems mss on (ci.solarSystemID=mss.solarSystemID) 
+JOIN evesupport.routefullsmall on ((mss.solarSystemID=end and start=:system) and length<=:length)
+$servicesql
+where 1=1
+$servicewhere
             ";
             error_log($sql2);
 } else {

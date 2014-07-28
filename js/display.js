@@ -55,6 +55,50 @@ $("#mainbody").hide();
             ]
         });
 
+    $("#inventionCosts").dataTable({
+        "bPaginate": false,
+        "bFilter": false,
+        "bInfo": false,
+        "bAutoWidth": false,
+        "bSortClasses": false,
+        "columnDefs": [{
+            "targets": [ 1,2,3 ],
+            className: "textright"
+            }
+            ]
+        });
+    
+    $("#metaItems").dataTable({
+        "bPaginate": false,
+        "bFilter": false,
+        "bInfo": false,
+        "ordering":false,
+        "bAutoWidth": false,
+        "bSortClasses": false,
+        "columnDefs": [{
+            "targets": [ 1 ],
+            className: "textright"
+            },
+            {
+            "targets": [ 2 ],
+            className: "text-center"
+            }
+            ]
+        });
+    
+    $("#decryptors").dataTable({
+        "bPaginate": false,
+        "bFilter": false,
+        "bInfo": false,
+         "ordering": false,
+        "bAutoWidth": false,
+        "bSortClasses": false,
+        "columnDefs": [{
+            "targets": [ 1,2,3,4 ],
+            className: "textright"
+            }
+            ]
+        });
 
     skills=$("#skillsTable").dataTable({
          "bPaginate": false,
@@ -96,6 +140,48 @@ $("#mainbody").hide();
                         }
                 });
                 $( "#me" ).val( $( "#meslider" ).slider( "value" ) );
+    });
+    
+    $(function() {
+                $( "#encryptionslider" ).slider({
+                        value:me,
+                        min: 1,
+                        max: 5,
+                        step: 1,
+                        slide: function( event, ui ) {
+                                $( "#encryption" ).val( ui.value );
+                                runNumbers()
+                        }
+                });
+                $( "#encryption" ).val( $( "#encryptionslider" ).slider( "value" ) );
+    });
+
+    $(function() {
+                $( "#dc1skillslider" ).slider({
+                        value:me,
+                        min: 1,
+                        max: 5,
+                        step: 1,
+                        slide: function( event, ui ) {
+                                $( "#dc1skill" ).val( ui.value );
+                                runNumbers()
+                        }
+                });
+                $( "#dc1skill" ).val( $( "#dc1skillslider" ).slider( "value" ) );
+    });
+    
+    $(function() {
+                $( "#dc2skillslider" ).slider({
+                        value:me,
+                        min: 1,
+                        max: 5,
+                        step: 1,
+                        slide: function( event, ui ) {
+                                $( "#dc2skill" ).val( ui.value );
+                                runNumbers()
+                        }
+                });
+                $( "#dc2skill" ).val( $( "#dc2skillslider" ).slider( "value" ) );
     });
 
     $(function() {
@@ -180,6 +266,38 @@ $("#mainbody").hide();
             change: function(event,ui) {taxRate=$("#taxRate").val();runNumbers();}
         });
     });
+
+    $(function() {
+        $("#teamme").spinner({
+            min:0,
+            max:7.5,
+            step: 0.5,
+            spin: function(event,ui) {teamMe=ui.value;runNumbers();},
+            change: function(event,ui) {teamMe=$("#teamme").val();runNumbers();}
+        });
+    });
+    
+    $(function() {
+        $("#teamte").spinner({
+            min:0,
+            max:15,
+            step: 1,
+            spin: function(event,ui) {teamTe=ui.value;runNumbers();},
+            change: function(event,ui) {teamTe=$("#teamte").val();runNumbers();}
+        });
+    });
+
+
+    $(function() {
+        $("#salary").spinner({
+            min:0,
+            max:18,
+            step: 1,
+            spin: function(event,ui) {salary=ui.value;runNumbers();},
+            change: function(event,ui) {salary=$("#salary").val();runNumbers();}
+        });
+    });
+
 });
 
 String.prototype.toHHMMSS = function () {

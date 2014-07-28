@@ -67,16 +67,30 @@ function hideshow(classvar){
 
 function loadRegionIndexes()
 {
+    addparam='';
+    if ($("#factory").checked) {
+        addparam='&factory=1'
+    }
+    if ($("#lab").checked) {
+        addparam=addparam+'&lab=1'
+    }
     if (currentindex!=$('#region').val()) {
-        queryurl="https://www.fuzzwork.co.uk/blueprint/api/regionIndexes.php?region="+$('#region').val();
+        queryurl="https://www.fuzzwork.co.uk/blueprint/api/regionIndexes.php?region="+$('#region').val()+addparam;
         $.getJSON(queryurl,function(data){populateIndexes(data);});
     }
 }
 
 function loadRangeIndexes()
 {
-        queryurl="https://www.fuzzwork.co.uk/blueprint/api/regionIndexes.php?system="+$('#systemname').val()+"&jumps="+$('#jumps').val();
-        $.getJSON(queryurl,function(data){populateIndexes(data);});
+    addparam='';
+    if ($("#factory").is(':checked')) {
+        addparam='&factory=1'
+    }
+    if ($("#lab").is(':checked')){
+        addparam=addparam+'&lab=1'
+    }
+    queryurl="https://www.fuzzwork.co.uk/blueprint/api/regionIndexes.php?system="+$('#systemname').val()+"&jumps="+$('#jumps').val()+addparam;
+    $.getJSON(queryurl,function(data){populateIndexes(data);});
 }
 
 var currentindex='';

@@ -27,4 +27,4 @@ $prices=new \EvePrices\EvePrices(array(
 
 $pricearray=$prices->returnPriceArray($typeids);
 
-echo json_encode($pricearray);
+echo json_encode($pricearray, JSON_NUMERIC_CHECK);

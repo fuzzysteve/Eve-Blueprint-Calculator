@@ -44,6 +44,37 @@ $(document).ready(function() {
     </div>
 </div>
 
+<div id="teams_div">
+    <div id="teams_div_panel" class="panel panel-default">
+        <div class="panel-heading"><h1 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#teams_div" href="#collapseTeams">Teams</a></h1></div>
+        <div id="collapseTeams" class="panel-collapse collapse">
+            <div class="panel-body">
+                <p>Fill in the 3 applicable team benefits. Completely freeform for experimentation</p>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="teamme">ME Modifier</label><input type=text value=0 name='teamme' id='teamme'>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="teamte">TE Modifier</label><input type=text value=0 name='teamte' id='teamte'>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="salary">Salary</label><input type=text value=0 name='salary' id='salary'>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                    <table class=table>
+                    <tr><th>Additional Cost</th><td id="teamCost" class="textright"></td></tr>
+                    <tr><th>Material Saving</th><td id="materialSaving" class="textright"></td></tr>
+                    <tr><th>Time Reduction</th><td id="teamTimeReduction" class="textright"></td></tr>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div id="materials_div">
     <div id="materials_div_panel" class="panel panel-default">
@@ -88,6 +119,7 @@ $(document).ready(function() {
                     <tr><th colspan=7>Build Time</th><td id='buildTime' class='text-right'></td></tr>
                     <tr id="inventioncosttr"><th colspan=7>Invention Cost</th><td id='inventionCost' class='text-right'></td></tr>
                     <tr><th colspan=7>Profit (Sell - Material - Install)</th><td id='profit' class='text-right'></td></tr>
+                    <tr><th colspan=3>Profit isk/hr</th><td id="iskhr"></td><th colspan=3>Profit isk/hr (Normalized to 24 hours)</th><td id="isktfhr"></td></tr>
                     </tfoot>
                 </table>
             </div>
@@ -206,7 +238,73 @@ $(document).ready(function() {
         <div class="panel-heading"><h1 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#invention_div" href="#collapseInvention">Invention</a></h1></div>
         <div id="collapseInvention" class="panel-collapse collapse">
             <div class="panel-body">
-I'm an invention div. Steve needs to write my math.
+                <p>Basic functionality for now. Eventually skills will be saveable, and will be the actual skills, not just the generics.</p>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p><label for="encryption">Encryption Skill</label></p>
+                        <p><input type="text" id="encryption" readonly style="border:0; color:#f6931f; font-weight:bold;"></p>
+                        <div id="encryptionslider"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <p><label for="dc1skill">Datacore Science Skill 1</label></p>
+                        <p><input type="text" id="dc1skill" readonly style="border:0; color:#f6931f; font-weight:bold;"></p>
+                        <div id="dc1skillslider"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <p><label for="dc2skill">Datacore Science Skill 2</label></p>
+                        <p><input type="text" id="dc2skill" readonly style="border:0; color:#f6931f; font-weight:bold;"></p>
+                        <div id="dc2skillslider"></div>
+                    </div>
+                </div>
+                <div class=row>
+                    <div class="col-md-12">
+                        <table id="inventionCosts" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Material Name</th>
+                                    <th>Quantity</th>
+                                    <th>Consumed</th>
+                                    <th>Cost per successful run</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                                <tr><th colspan=3>Blueprint copy install cost</th><td id="blueprintCost" class="text-right"></td></tr>
+                                <tr><th colspan=3>Install cost</th><td id="inventionInstall" class="text-right"></td></tr>
+                                <tr><th colspan=3>Total cost per successful run</th><td id="perRunCost" class="text-right"></td></tr>
+                                <tr><th colspan=3>Probability</th><td id="inventionProbability" class="text-right"></td></tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class=row>
+                    <div class="col-md-7">
+                    <table id="decryptors" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Decryptor Name</th>
+                                <th>Probability</th>
+                                <th>&#177;ME</th>
+                                <th>&#177;TE</th>
+                                <th>&#177;Runs</th>
+                                <th>Select</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    </div>
+                    <div class="col-md-5">
+                    <table id="metaItems" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Meta Item Name</th>
+                                <th>Level</th>
+                                <th>Select</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

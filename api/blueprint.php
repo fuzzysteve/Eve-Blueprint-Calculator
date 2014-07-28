@@ -1,5 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: *");
+header('Content-Type: application/json');
 require_once('../includes/db.inc.php');
 require_once('/home/web/fuzzwork/htdocs/blueprint/vendor/autoload.php');
 
@@ -43,6 +44,7 @@ $returnarray['blueprintSkills']=$blueprint->blueprintSkills();
 $returnarray['blueprintDetails']=$blueprint->blueprintDetails();
 $returnarray['activityMaterials']=$blueprint->activityMaterials();
 $returnarray['metaVersions']=$blueprint->metaVersions();
+$returnarray['decryptors']=$blueprint->decryptors();
 
 
 echo json_encode($returnarray, JSON_NUMERIC_CHECK);
