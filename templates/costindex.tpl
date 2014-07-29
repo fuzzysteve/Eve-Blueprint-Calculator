@@ -33,7 +33,8 @@
 <input type="button" onclick="loadRangeIndexes();" value="Load Range">
 </div>
 <div class="col-md-4">
-<p>These only work, when you have them set before loading (WIP)</p>
+<p>These only work, when you have them set before loading.</p>
+<p>Set both for systems with both factories and labs (may be different stations)</p>
 <label for="factory">Require Factory</label><input type="checkbox" id="factory"><br>
 <label for="lab">Require Lab</label><input type="checkbox" id="lab"><br>
 </div>

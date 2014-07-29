@@ -8,16 +8,15 @@ $servicewhere='';
 if (isset($_REQUEST['lab']) or isset($_REQUEST['factory'])) {
     
     $servicesql=' 
-    JOIN staStations ON mss.solarsystemid=staStations.solarsystemid
-    JOIN staOperationServices ON  (staStations.operationID=staOperationServices.operationID)
+    JOIN evesupport.bitSolarSystemServices bsss ON  (bsss.solarsystemid=mss.solarsystemid)
     ';
 
     if (isset($_REQUEST['lab']) and isset($_REQUEST['factory'])) {
-        $servicewhere=' and serviceID in (8192,16384) ';
+        $servicewhere=' and bsss.service&24576 = 24576  ';
     } elseif (isset($_REQUEST['lab'])) {
-        $servicewhere=' and serviceID in (16384) ';
+        $servicewhere=' and bsss.service&16384 = 16384 ';
     } elseif (isset($_REQUEST['factory'])) {
-        $servicewhere=' and serviceID in (8192) ';
+        $servicewhere=' and bsss.service&8192 = 8192 ';
 
     }
 }
