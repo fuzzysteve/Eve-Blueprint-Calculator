@@ -9,7 +9,7 @@ function populateTables(blueprintJson)
         $(newrow).attr('id', 'material-'+material.typeid);
     }
     $("#collapseOne").collapse('show');
-    $("#nameDiv").text(blueprintData.blueprintDetails.productTypeName);
+    $("#nameDiv").html('<a href="/blueprint/?typeid='+blueprintData.blueprintDetails.productTypeID+'">'+blueprintData.blueprintDetails.productTypeName+'</a>');
 
     skills=$("#skillsTable").DataTable();
     skills.rows().remove();
@@ -35,17 +35,6 @@ function populateTables(blueprintJson)
         }
         $("#invention_div").show();
         $("#inventioncosttr").show();
-        metaversion=$('#metaItems').DataTable();
-        metaversion.rows().remove();
-            metaversion.row.add(['None',0,'<input type="radio" name="metaversion" value="0" checked onchange="runNumbers();">']);
-        for (materialid in blueprintData.metaVersions) {
-            metaversion.row.add([
-                blueprintData.metaVersions[materialid].name,
-                materialid,
-                '<input type="radio" name="metaversion" value="'+materialid+'" onchange="runNumbers();">'
-            ]);
-        }
-        metaversion.draw();
         decryptors=$('#decryptors').DataTable();
         decryptors.rows().remove();
             decryptors.row.add(['None',1,0,0,0,'<input type="radio" name="decryptor" value="-1" checked onchange="runNumbers();">']);
@@ -178,8 +167,8 @@ function runNumbers()
     $('#installCost').number((runCost*indexData.costIndexes["1"])*taxmultiplier*(1+(salary/100)),2);
     $('#teamCost').number((runCost*indexData.costIndexes["1"])*taxmultiplier*(salary/100),2);
     profitNumber=(((priceData[blueprintData.blueprintDetails.productTypeID].sell*blueprintData.blueprintDetails.productQuantity*runs)-totalPrice)-(runCost*indexData.costIndexes["1"]*taxmultiplier*(1+(salary/100))))-inventionCost;
-    buildTime=blueprintData.blueprintDetails.times[1]*(1-(te/100))*(1-((industry*4)/100))*(1-((aindustry)/100))*facilityte[facility]*runs*(1-(teamTe/100));
-    teamTimeSaving=blueprintData.blueprintDetails.times[1]*(1-(te/100))*(1-((industry*4)/100))*(1-((aindustry)/100))*facilityte[facility]*runs*(teamTe/100);
+    buildTime=blueprintData.blueprintDetails.times[1]*(1-(te/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte[facility]*runs*(1-(teamTe/100));
+    teamTimeSaving=blueprintData.blueprintDetails.times[1]*(1-(te/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte[facility]*runs*(teamTe/100);
     $('#teamTimeReduction').text(String(teamTimeSaving).toHHMMSS());
     $('#buildTime').text(String(buildTime).toHHMMSS());
     $('#profit').number(profitNumber,2);
@@ -187,6 +176,7 @@ function runNumbers()
     $('#isktfhr').number((profitNumber/Math.ceil(buildTime/86400))/24,2);
 
     materials.draw();
+    runTimeNumbers();
 }
 
 
@@ -196,16 +186,13 @@ function inventionNumbers()
         encryptionskill=parseInt($("#encryption").val()); 
         dc1skill=parseInt($("#dc1skill").val()); 
         dc2skill=parseInt($("#dc2skill").val()); 
-        metaitem=parseInt($('#metaItems input[type="radio"]:checked').val());
-        metamult=metaitem?(1+(5/(5-metaitem)/10)):1;
         decryptor=parseInt($('#decryptors input[type="radio"]:checked').val());
         decryptormult=1;
         if (decryptor>-1) {
             decryptormult=blueprintData['decryptors'][decryptor].multiplier;
         }
         taxmultiplier=(taxRate/100)+1;
-        inventionChance=Math.min(((blueprintData.blueprintDetails.probability*100) * (1 + (0.01 * encryptionskill)+((dc1skill+dc2skill)*0.02)))*metamult*decryptormult,100);
-        //(1+(5/(5-metaitem)/10))*decryptor),100);
+        inventionChance=Math.min(((blueprintData.blueprintDetails.probability*100) * (1 + ((dc1skill+dc2skill)/30)+(encryptionskill/40)))*decryptormult,100);
         invention=$('#inventionCosts').DataTable();
         $("#inventionProbability").number(inventionChance,1);
         for (materialid in blueprintData['activityMaterials'][8]) {
@@ -217,9 +204,6 @@ function inventionNumbers()
         blueprintcost=blueprintData.blueprintDetails.precursorAdjustedPrice*indexData.costIndexes["5"]*0.02;
         $('#blueprintCost').number(blueprintcost)
         $('#inventionInstall').number(((runCost/runs)*0.02*indexData.costIndexes["8"])*taxmultiplier);
-        if (metaitem) {
-            inventionCost=inventionCost+(priceData[blueprintData.metaVersions[metaitem].typeid].sell);
-        }
         if (decryptor>-1)
         {
             inventionCost=inventionCost+(priceData[blueprintData['decryptors'][decryptor].typeid].sell);
@@ -243,6 +227,7 @@ function updatePrices()
 
 function runTimeNumbers()
 {
+    taxmultiplier=(taxRate/100)+1;
     meRes=$('#meresearch').val().split('-');
     teRes=$('#teresearch').val().split('-');
     meRes[0]=parseInt(meRes[0]);
@@ -262,10 +247,10 @@ function runTimeNumbers()
         tecost=tecost+(researchMultiplier[i/2]*runCost*0.02);
     }
 
-    $('#metime').text(String(metime*rfacilityme[rfacility]*(1-(metallurgy*5/100))).toHHMMSS());
-    $('#tetime').text(String(tetime*rfacilityte[rfacility]*(1-(research*5/100))).toHHMMSS());
-    $('#mecost').number(mecost*indexData.costIndexes["4"],2);
-    $('#tecost').number(tecost*indexData.costIndexes["3"],2);
+    $('#metime').text(String(metime*rfacilityme[rfacility]*(1-(metallurgy*5/100))*(1-((aindustry*3)/100))).toHHMMSS());
+    $('#tetime').text(String(tetime*rfacilityte[rfacility]*(1-(research*5/100))*(1-((aindustry*3)/100))).toHHMMSS());
+    $('#mecost').number(mecost*indexData.costIndexes["4"]*taxmultiplier,2);
+    $('#tecost').number(tecost*indexData.costIndexes["3"]*taxmultiplier,2);
 }
 
 $.urlParam = function(name){
@@ -277,6 +262,63 @@ $.urlParam = function(name){
     }
 }
 
+
+function loadLists() {
+    if (!characterid) {
+        return;
+    }
+    
+    $('#shoppingListSelect').append($('<option>',{value:'new'}).text('Create New List'));
+    $.getJSON('/blueprint/api/shoppingList/listNames.php?listnonce='+listnonce,function( data ) {
+        $.each( data, function( key, val ) {
+            $('#shoppingListSelect')
+                .append($('<option>',{value:val.id})
+                .text(val.name));
+        });
+        $('#shoppingListSelect')[0][1].defaultSelected=true;
+        });
+}
+
+function addList() {
+    identifier=$('#listname').val();
+    if (identifier.length>30  || identifier.length<3){
+    alert('Name must be between 4 and 30 characters');
+    return;
+    }
+   $.post('/blueprint/api/shoppingList/makeList.php',{'nonce':nonce,'identifier':identifier},function( data ) 
+   {
+        listname=data.name;
+        listid=data.id;
+        $('#shoppingListSelect').append($('<option>',{value:listid}).text(listname));
+        $('#shoppingListSelect option[value="'+listid+'"]').prop('selected', true);
+        $("#newlistmodal").dialog("close");
+        saveList();
+
+   },'json');
+}
+
+
+
+function saveList() {
+    if ($('#shoppingListSelect').val()=='new') {
+        $("#newlistmodal").dialog("open");
+        return;
+    }
+    mats=Array();
+    for (materialid in blueprintData['activityMaterials'][1]) {
+        material=blueprintData['activityMaterials'][1][materialid];
+        mats.push({'typeid':material.typeid,'jobquantity':Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme[facility]*(1-(teamMe/100)))*runs))});
+    }
+    $.post('/blueprint/api/shoppingList/addItems.php',{'nonce':nonce,'listid':$('#shoppingListSelect').val(),'identifier':blueprintData.blueprintDetails.productTypeName,'itemJson':JSON.stringify(mats)},function(data) {
+        if (data.status != 'success') {
+            alert('Error saving');
+        } else {
+            alert('saved to list');
+        }
+    },'json');
+
+
+}
 
 var te=0;
 var me=0;

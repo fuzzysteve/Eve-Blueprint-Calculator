@@ -68,10 +68,10 @@ function hideshow(classvar){
 function loadRegionIndexes()
 {
     addparam='';
-    if ($("#factory").checked) {
+    if ($("#factory").is(':checked')) {
         addparam='&factory=1'
     }
-    if ($("#lab").checked) {
+    if ($("#lab").is(':checked')) {
         addparam=addparam+'&lab=1'
     }
     if (currentindex!=$('#region').val()) {

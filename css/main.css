@@ -1,5 +1,4 @@
 body { background-color:#D9D9D9}
-td {background-color:#EEEEEE}
 .icon32 {vertical-align:middle;}
 .icon64 {vertical-align:middle;}
 .perfect {background-color:green;}
@@ -8,3 +7,4 @@ td.textright {text-align: right;}
 td.lowsec {background-color:orange !important}
 td.highsec {background-color:lightgreen !important}
 td.nullsec{background-color:crimson !important}
+tr.group, tr.group:hover {  background-color: #ddd !important;  }

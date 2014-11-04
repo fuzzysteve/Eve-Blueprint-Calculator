@@ -8,6 +8,10 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $("#itemname").autocomplete({ source:"/blueprint/api/blueprintName.php",minLength:2,select: function( event, ui ) { $("#itemname").val(ui.item.value);loadBlueprint(ui.item.id);}});
+    if (isFinite($.urlParam('typeid')) && ($.urlParam('typeid')!=null)) {
+        temp=$.urlParam('typeid');
+        loadBlueprint(parseInt(temp));
+    }
 });
 
 </script>
@@ -17,6 +21,35 @@ $(document).ready(function() {
 <div id="mainbody">
 <div id="name_div"><h1 id='nameDiv'></h1></div>
 <div id="link_div"></div>
+{nocache}
+{if $auth_characterid}
+<div id="loggedin" class="panel-group">
+    <div id="loggedin_panel" class="panel panel-default">
+        <div class="panel-heading"><h1 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#loggedin_panel" href="#collapseShopping">Shopping Lists</a></h1></div>
+        <div id="collapseShopping" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class=row>
+                    <div class="col-md-6">
+                        <select id="shoppingListSelect" name="shoppingListSelect">
+                        </select>
+                    </div>
+                    <div class="col-md-6"> 
+                        <button onclick="saveList();">Add to list</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="newlistmodal">
+    <label for="listname">List Identifier</label>
+    <input name="listname" maxwidth=30 class="text ui-widget-content ui-corner-all" id="listname">
+</div>
+
+
+{/if}
+{/nocache}
 <div id="facility_div">
     <div id="facility_div_panel" class="panel panel-default">
         <div class="panel-heading"><h1 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#facility_div" href="#collapseFacilities">Facility</a></h1></div>
@@ -31,10 +64,10 @@ $(document).ready(function() {
                 </select>
                 <label for="rFacility">Research Facility</label>
                 <select name="rfacility" id="rfacility" onchange='rfacility=$("#rfacility").val();runTimeNumbers();'>
-                    <option>Station</option>
-                    <option>Mobile Lab</option>
-                    <option>Hyasyoda Mobile Lab TE</option>
-                    <option>Design Lab</option>
+                    <option value="1">Station</option>
+                    <option value="2">Mobile Lab</option>
+                    <option value="3">Hyasyoda Mobile Lab TE</option>
+                    <option value="4">Design Lab</option>
                 </select>
 <br>
                 <label for="taxRate">Facility Tax Rate</label><input type=text value=0 name="taxRate" id="taxRate">
@@ -279,7 +312,7 @@ $(document).ready(function() {
                     </div>
                 </div>
                 <div class=row>
-                    <div class="col-md-7">
+                    <div class="col-md-12">
                     <table id="decryptors" class="table table-striped">
                         <thead>
                             <tr>
@@ -293,16 +326,6 @@ $(document).ready(function() {
                         </thead>
                     </table>
                     </div>
-                    <div class="col-md-5">
-                    <table id="metaItems" class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Meta Item Name</th>
-                                <th>Level</th>
-                                <th>Select</th>
-                            </tr>
-                        </thead>
-                    </table>
                     </div>
                 </div>
             </div>
@@ -365,4 +388,15 @@ $(document).ready(function() {
         </div>
     </div>
 </div>
+<script type="text/javascript">
+{nocache}
+{if $auth_characterid>0}
+nonce='{$sessionnonce}';
+listnonce='{$listnonce}';
+characterid='{$auth_characterid}';
+{else}
+characterid=0;
+{/if}
+{/nocache}
+</script>
 {/block}

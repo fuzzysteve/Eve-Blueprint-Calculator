@@ -1,6 +1,11 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Content-type: application/xml");
+$seconds_to_cache = 43200;
+$ts = gmdate("D, d M Y H:i:s", time() + $seconds_to_cache) . " GMT";
+header("Expires: $ts");
+header("Pragma: cache");
+header("Cache-Control: max-age=$seconds_to_cache");
 require_once('../includes/db.inc.php');
 require_once('/home/web/fuzzwork/htdocs/blueprint/vendor/autoload.php');
 
@@ -38,10 +43,7 @@ $blueprint= new EveBlueprint($dbh, $itemid);
 $returnarray=array();
 
 
-#$returnarray['blueprintSkills']=$blueprint->blueprintSkills();
 $returnarray['blueprintDetails']=$blueprint->blueprintDetails();
-#$returnarray['metaVersions']=$blueprint->metaVersions();
-#$returnarray['decryptors']=$blueprint->decryptors();
 $returnarray['activityMaterials']=$blueprint->activityMaterials();
 
 

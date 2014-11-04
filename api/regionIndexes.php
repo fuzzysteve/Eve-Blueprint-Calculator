@@ -26,7 +26,7 @@ if (isset($_REQUEST['region'])) {
     $region=$_REQUEST['region'];
     $param=$region;
     $sql='SELECT regionID id FROM mapRegions WHERE regionid=?';
-    $sql2="SELECT ci.solarSystemID,solarSystemName,activityID,costIndex,mss.security,0
+    $sql2="SELECT ci.solarSystemID,solarSystemName,activityID,costIndex,mss.security,0 length
     FROM evesupport.costIndex ci 
     JOIN mapSolarSystems mss on (ci.solarSystemID=mss.solarSystemID) 
     $servicesql

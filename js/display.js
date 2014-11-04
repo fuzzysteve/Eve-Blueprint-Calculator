@@ -68,23 +68,6 @@ $("#mainbody").hide();
             ]
         });
     
-    $("#metaItems").dataTable({
-        "bPaginate": false,
-        "bFilter": false,
-        "bInfo": false,
-        "ordering":false,
-        "bAutoWidth": false,
-        "bSortClasses": false,
-        "columnDefs": [{
-            "targets": [ 1 ],
-            className: "textright"
-            },
-            {
-            "targets": [ 2 ],
-            className: "text-center"
-            }
-            ]
-        });
     
     $("#decryptors").dataTable({
         "bPaginate": false,
@@ -297,6 +280,17 @@ $("#mainbody").hide();
             change: function(event,ui) {salary=$("#salary").val();runNumbers();}
         });
     });
+
+    if (characterid) {
+        newlist=$("#newlistmodal").dialog({
+            autoOpen:false,
+            modal:false,
+            buttons: {
+                "Create List":addList
+            }
+        })
+        loadLists();
+    }
 
 });
 
