@@ -23,7 +23,7 @@ if ($_POST['nonce'] != md5($session_nonce.$_SESSION['auth_id'].$_SESSION['auth_s
 
 
 $sql=<<<EOS
-SELECT it.typeid,it.typename,quantity,slk.identifier,sli.id,quantity*price sellprice
+SELECT it.typeid,it.typename,quantity,slk.identifier,sli.id,quantity*price sellprice,volume*quantity/portionSize volume
 FROM industrySupport.shoppingList sl
 JOIN industrySupport.shoppingListKey slk on (slk.shoppingList=sl.id)
 JOIN industrySupport.shoppingListItem sli on (sli.shoppingListKey=slk.id)
@@ -48,7 +48,8 @@ while ($row=$stmt->fetchObject()) {
         'typename'=>$row->typename,
         'typeid'=>$row->typeid,
         'quantity'=>$row->quantity,
-        'sellprice'=>$row->sellprice
+        'sellprice'=>$row->sellprice,
+        'volume'=>$row->volume
     );
 }
 

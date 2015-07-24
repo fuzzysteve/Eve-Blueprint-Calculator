@@ -84,16 +84,20 @@ function loadListContents() {
     }
     material=new Object();
     matname=new Object();
+    matvolume=new Object();
     $.post('/blueprint/api/shoppingList/listContents.php',{'nonce':nonce,'listid':listid},function( data )
     {
         items=$("#items").DataTable(); 
         items.rows().remove();
+        totalvolume=0;
         $.each(data,function(key,item){
             if (isFinite(material[item.typeid])) {
                 material[item.typeid]=material[item.typeid]+item.quantity;
+                matvolume[item.typeid]+=item.volume;
             } else {
                 material[item.typeid]=item.quantity;
                 matname[item.typeid]=item.typename;
+                matvolume[item.typeid]=item.volume;
             }
             items.row.add([
                 item.id,
@@ -101,15 +105,19 @@ function loadListContents() {
                 item.typename,
                 $.number(item.quantity),
                 $.number(item.sellprice),
+                $.number(item.volume),
                 '<button onclick="deleteItem(this,'+item.id+');">Delete</button>'
                 ]);
+            totalvolume+=item.volume;
         });
         items.draw();
         totals=$("#totals").DataTable();
         totals.rows().remove();
         $.each(material,function(key,value){
-            totals.row.add([matname[key],$.number(value)]);
+            totals.row.add([matname[key],$.number(value),$.number(matvolume[key])]);
         });
+        var volumec=totals.column(2);
+        $(volumec.footer()).html($.number(totalvolume));
         totals.draw();
     },'json');
 }

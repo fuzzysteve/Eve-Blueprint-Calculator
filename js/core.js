@@ -10,7 +10,11 @@ function populateTables(blueprintJson)
     }
     $("#collapseOne").collapse('show');
     $("#nameDiv").html('<a href="/blueprint/?typeid='+blueprintData.blueprintDetails.productTypeID+'">'+blueprintData.blueprintDetails.productTypeName+'</a>');
-
+    try {
+        var stateObj = {};
+        history.pushState(stateObj, blueprintData.blueprintDetails.productTypeName, "/blueprint/?typeid="+blueprintData.blueprintDetails.productTypeID);
+    }
+    catch(err) { console.log("No pushstate");}
     skills=$("#skillsTable").DataTable();
     skills.rows().remove();
     for (activity in blueprintData.blueprintSkills) {
@@ -161,6 +165,7 @@ function runNumbers()
     if (blueprintData.blueprintDetails.techLevel==2) {
         inventionNumbers();
     }
+    $('#unitPrice').number(priceData[blueprintData.blueprintDetails.productTypeID].sell,2);
     $('#materialSaving').number(totalPriceWT-totalPrice,2);
     $('#jobCost').number(totalPrice,2);
     $('#adjustedCost').number(runCost,2);
@@ -342,7 +347,7 @@ var regionid=10000002;
 var taxRate=0;
 var profitNumber=0;
 var activityNames={'1':'Manufacturing','3':'TE Research','4':'ME research','5':'Copying','7':'Reverse Engineering','8':'Invention'};
-var facilityme={'1':1,'2':0.98,'3':0.9,'4':1.05};
+var facilityme={'1':1,'2':0.98,'3':0.85,'4':1.05};
 var facilityte={'1':1,'2':0.75,'3':0.75,'4':0.65};
 var rfacilityme={'1':1,'2':0.7,'3':0.65,'4':Infinity}
 var rfacilityte={'1':1,'2':0.7,'3':0.65,'4':Infinity}

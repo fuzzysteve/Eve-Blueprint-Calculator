@@ -23,6 +23,7 @@
         <th>Item</th>
         <th>Quantity</th>
         <th>Ballpark Jita Price</th>
+        <th>Volume</th>
         <th>Delete</th>
     </tr>
 </thead>
@@ -36,10 +37,15 @@
     <tr>
     <th>Item</th>
     <th>Quantity</th>
+    <th>Volume</th>
     </tr>
 </thead>
 <tbody>
 </tbody>
+<tfoot>
+<tr>
+<th colspan=2>Total Volume</th><th></th>
+</tr>
 </table>
 
 

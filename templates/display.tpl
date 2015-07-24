@@ -77,7 +77,7 @@ $(document).ready(function() {
     </div>
 </div>
 
-<div id="teams_div">
+<div id="teams_div" style="display:none">
     <div id="teams_div_panel" class="panel panel-default">
         <div class="panel-heading"><h1 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#teams_div" href="#collapseTeams">Teams</a></h1></div>
         <div id="collapseTeams" class="panel-collapse collapse">
@@ -146,6 +146,7 @@ $(document).ready(function() {
                     <tbody id="materialsBody">
                     </tbody>
                     <tfoot>
+                    <tr><th colspan=7>Item Unit Price</th><td id='unitPrice' class='text-right'></td></tr>
                     <tr><th colspan=7>Job Material Cost</th><td id='jobCost' class='text-right'></td></tr>
                     <tr><th colspan=7>Job Base Price</th><td id='adjustedCost' class='text-right'></td></tr>
                     <tr><th colspan=7>Install Price</th><td id='installCost' class='text-right'></td></tr>

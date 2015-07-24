@@ -4,6 +4,7 @@ body { background-color:#D9D9D9}
 .perfect {background-color:green;}
 #priceheader {margin-top:0;margin-bottom:0;text-align:center; width:100%;font-size:1.875em;cursor:move}
 td.textright {text-align: right;}
+td.textcenter {text-align: center;}
 td.lowsec {background-color:orange !important}
 td.highsec {background-color:lightgreen !important}
 td.nullsec{background-color:crimson !important}
