@@ -5,7 +5,12 @@ function populateTables(blueprintJson)
     materials.rows().remove(); 
     for (materialid in blueprintData['activityMaterials'][1]) {
         material=blueprintData['activityMaterials'][1][materialid];
-        var newrow=materials.row.add([material.typeid,material.name,material.quantity,0,0,0,0,0]).draw().node();
+        var newrow='';
+        if (material.maketype>0) {
+            newrow=materials.row.add([material.typeid,'<a href="blueprint/?typeid='+material.maketype+'">'+material.name+"</a>",material.quantity,0,0,0,0,0]).draw().node();
+        } else {
+            newrow=materials.row.add([material.typeid,material.name,material.quantity,0,0,0,0,0]).draw().node();
+        }
         $(newrow).attr('id', 'material-'+material.typeid);
     }
     $("#collapseOne").collapse('show');
@@ -148,9 +153,14 @@ function runNumbers()
         reducedquantity=material.quantity*(1-(me/100))*facilityme[facility]*(1-(teamMe/100));
         jobquantity=Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme[facility]*(1-(teamMe/100)))*runs));
         jobquantityWT=Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme[facility])*runs));
+        if (material.maketype>0) {
+            name='<a href="/blueprint/?typeid='+material.maketype+'" target="_blank">'+material.name+"</a>";
+        } else {
+            name=material.name
+        }
         materials.row($('#material-'+material.typeid)).data([
             material.typeid,
-            material.name,
+            name,
             material.quantity,
             reducedquantity.toFixed(2),
             jobquantity,
