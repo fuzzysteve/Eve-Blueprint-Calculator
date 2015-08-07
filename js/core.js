@@ -29,7 +29,7 @@ function populateTables(blueprintJson)
     }
     skills.draw();
 
-    if (blueprintData.blueprintDetails.techLevel==2) {
+    if (blueprintData.blueprintDetails.techLevel==2 && ('8' in blueprintData['activityMaterials'])) {
         invention=$('#inventionCosts').DataTable();
         invention.rows().remove();
         for (materialid in blueprintData['activityMaterials'][8]) {
@@ -197,7 +197,7 @@ function runNumbers()
 
 function inventionNumbers()
 {
-     if (blueprintData.blueprintDetails.techLevel==2) {
+     if (blueprintData.blueprintDetails.techLevel==2 && ('8' in blueprintData['activityMaterials'])) {
         encryptionskill=parseInt($("#encryption").val()); 
         dc1skill=parseInt($("#dc1skill").val()); 
         dc2skill=parseInt($("#dc2skill").val()); 
