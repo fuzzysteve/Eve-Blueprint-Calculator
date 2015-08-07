@@ -139,7 +139,7 @@ $(document).ready(function() {
                             <th>Reduced Quantity</th>
                             <th>Job Quantity</th>
                             <th>Regional Price</th>
-                            <th>Adjusted Price</th>
+                            <th title="Price used for manufacturing quotes, and costs.">Adjusted Price</th>
                             <th>Job Price</th>
                         </tr>
                     </thead>
@@ -148,7 +148,7 @@ $(document).ready(function() {
                     <tfoot>
                     <tr><th colspan=7>Item Unit Price</th><td id='unitPrice' class='text-right'></td></tr>
                     <tr><th colspan=7>Job Material Cost</th><td id='jobCost' class='text-right'></td></tr>
-                    <tr><th colspan=7>Job Base Price</th><td id='adjustedCost' class='text-right'></td></tr>
+                    <tr><th colspan=7 title="The price that is then multiplied by the cost index, to work out the install cost">Job Base Price</th><td id='adjustedCost' class='text-right'></td></tr>
                     <tr><th colspan=7>Install Price</th><td id='installCost' class='text-right'></td></tr>
                     <tr><th colspan=7>Build Time</th><td id='buildTime' class='text-right'></td></tr>
                     <tr id="inventioncosttr"><th colspan=7>Invention Cost</th><td id='inventionCost' class='text-right'></td></tr>
