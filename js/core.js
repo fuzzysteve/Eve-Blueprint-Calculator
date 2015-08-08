@@ -182,9 +182,15 @@ function runNumbers()
     $('#installCost').number((runCost*indexData.costIndexes["1"])*taxmultiplier*(1+(salary/100)),2);
     $('#teamCost').number((runCost*indexData.costIndexes["1"])*taxmultiplier*(salary/100),2);
     profitNumber=(((priceData[blueprintData.blueprintDetails.productTypeID].sell*blueprintData.blueprintDetails.productQuantity*runs)-totalPrice)-(runCost*indexData.costIndexes["1"]*taxmultiplier*(1+(salary/100))))-inventionCost;
-    buildTime=blueprintData.blueprintDetails.times[1]*(1-(te/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte[facility]*runs*(1-(teamTe/100));
-    teamTimeSaving=blueprintData.blueprintDetails.times[1]*(1-(te/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte[facility]*runs*(teamTe/100);
-    $('#teamTimeReduction').text(String(teamTimeSaving).toHHMMSS());
+    if (blueprintData.blueprintDetails.techLevel==2 && ('8' in blueprintData['activityMaterials'])) {
+        dc1skill=parseInt($("#dc1skill").val());
+        dc2skill=parseInt($("#dc2skill").val());
+        dcmultiplier=(1-(dc1skill/100))*(1-(dc2skill/100))
+    } else {
+        dcmultiplier=1;
+    }
+
+    buildTime=blueprintData.blueprintDetails.times[1]*(1-(te/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte[facility]*runs*dcmultiplier;
     $('#buildTime').text(String(buildTime).toHHMMSS());
     $('#profit').number(profitNumber,2);
     $('#iskhr').number((profitNumber/buildTime)*3600,2);
