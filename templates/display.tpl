@@ -72,42 +72,11 @@ $(document).ready(function() {
 <br>
                 <label for="taxRate">Facility Tax Rate</label><input type=text value=0 name="taxRate" id="taxRate">
                 <label for="systemName">SystemName</label><input type=text value="Jita" name="system" id="systemName">
+                <img src="/blueprint/css/factory.png" class="pull-right" id="facilities" width=40 height=40>
             </div>
         </div>
     </div>
 </div>
-
-<div id="teams_div" style="display:none">
-    <div id="teams_div_panel" class="panel panel-default">
-        <div class="panel-heading"><h1 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#teams_div" href="#collapseTeams">Teams</a></h1></div>
-        <div id="collapseTeams" class="panel-collapse collapse">
-            <div class="panel-body">
-                <p>Fill in the 3 applicable team benefits. Completely freeform for experimentation</p>
-                <div class="row">
-                    <div class="col-md-4">
-                        <label for="teamme">ME Modifier</label><input type=text value=0 name='teamme' id='teamme'>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="teamte">TE Modifier</label><input type=text value=0 name='teamte' id='teamte'>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="salary">Salary</label><input type=text value=0 name='salary' id='salary'>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                    <table class=table>
-                    <tr><th>Additional Cost</th><td id="teamCost" class="textright"></td></tr>
-                    <tr><th>Material Saving</th><td id="materialSaving" class="textright"></td></tr>
-                    <tr><th>Time Reduction</th><td id="teamTimeReduction" class="textright"></td></tr>
-                    </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <div id="materials_div">
     <div id="materials_div_panel" class="panel panel-default">
@@ -160,6 +129,41 @@ $(document).ready(function() {
         </div>
     </div>
 </div>
+
+
+<div id="mat_materials_div">
+    <div id="mat_materials_div_panel" class="panel panel-default">
+        <div class="panel-heading"><h1 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#mat_materials_div" href="#mat_collapseOne">Materials for Materials</a></h1></div>
+        <div id="mat_collapseOne" class="panel-collapse collapse ">
+            <div class="panel-body">
+            <div id="Material-blueprint-details">
+
+            </div>
+                <table border=1 id="mat_materialsTable" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>For</th>
+                            <th>Material</th>
+                            <th>Initial Quantity per run</th>
+                            <th>Reduced Quantity</th>
+                            <th>Job Quantity</th>
+                            <th>Regional Price</th>
+                            <th title="Price used for manufacturing quotes, and costs.">Adjusted Price</th>
+                            <th>Job Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mat_materialsBody">
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 <div id="player_skills_div">
     <div id="playser_skills_div_panel" class="panel panel-default">
