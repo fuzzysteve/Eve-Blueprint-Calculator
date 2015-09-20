@@ -116,7 +116,7 @@ function getMatMaterials2(materialid,blueprintdetails) {
     p.appendChild(label);
     input.setAttribute("id", "spin-me-"+matid);
     input.setAttribute("name", "spin-me-"+matid);
-    input.setAttribute("value", 0);
+    input.setAttribute("value", 10);
     p.appendChild(input);
     label = document.createElement('label');
     text = document.createTextNode("TE:");
@@ -126,11 +126,11 @@ function getMatMaterials2(materialid,blueprintdetails) {
     p.appendChild(label);
     input.setAttribute("id", "spin-te-"+matid);
     input.setAttribute("name", "spin-te-"+matid);
-    input.setAttribute("value", 0);
+    input.setAttribute("value", 20);
     p.appendChild(input);
     $('#Material-blueprint-details').append(p);
     $("#spin-me-"+matid).spinner({min:0,max:10,spin:function(event,ui){blueprintData['activityMaterials'][1][matid]['me']=parseInt(ui.value);runNumbers();},change:function(event,ui){blueprintData['activityMaterials'][1][matid]['me']=parseInt($("#spin-me-"+matid).val());runNumbers();}});
-    $("#spin-te-"+matid).spinner({min:0,max:10,spin:function(event,ui){blueprintData['activityMaterials'][1][matid]['te']=parseInt(ui.value);runNumbers();},change:function(event,ui){blueprintData['activityMaterials'][1][matid]['te']=parseInt($("#spin-te-"+matid).val());runNumbers();}});
+    $("#spin-te-"+matid).spinner({min:0,max:20,spin:function(event,ui){blueprintData['activityMaterials'][1][matid]['te']=parseInt(ui.value);runNumbers();},change:function(event,ui){blueprintData['activityMaterials'][1][matid]['te']=parseInt($("#spin-te-"+matid).val());runNumbers();}});
     generateMaterialList();
     loadPrices();
 }
@@ -258,10 +258,11 @@ function runNumbers()
                     $.number(priceData[materialin.typeid].sell*matjobquantity,2)
                 ])
                 matTotalPrice=matTotalPrice+priceData[materialin.typeid].sell*matjobquantity/blueprintData['activityMaterials'][1][materialid]['materialquantity'];
-                matRunCost=matRunCost+priceData[materialin.typeid].adjusted*materialin.quantity*runs;
+                matRunCost=matRunCost+priceData[materialin.typeid].adjusted*materialin.quantity*runs*jobquantity;
             }
             totalPriceWT=totalPriceWT+matTotalPrice
             totalPrice=totalPrice+matTotalPrice
+            runCost=runCost+(priceData[material.typeid].adjusted*material.quantity*runs);
             runCost=runCost+matRunCost;
             materials.row($('#material-'+material.typeid)).data([
                 material.typeid,
