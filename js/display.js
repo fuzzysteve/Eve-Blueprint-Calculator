@@ -55,6 +55,14 @@ $("#mainbody").hide();
             ]
         });
 
+    $('#allMaterials').dataTable({
+         "bPaginate": false,
+         "bFilter": false,
+         "bInfo": false,
+         "bAutoWidth": false,
+         "bSortClasses": false
+    });
+
     $("#inventionCosts").dataTable({
         "bPaginate": false,
         "bFilter": false,

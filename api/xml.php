@@ -62,10 +62,10 @@ foreach ($returnarray['activityMaterials'] as $activity => $details) {
         $mat->$add('name', $material['name']);
         $mat->$add('typeid', $material['typeid']);
         $mat->$add('quantity', $material['quantity']);
-        $mat->$add('consume', $material['consume']);
+        $mat->$add('consume', 1);
         $mat->$add(
             'condensed',
-            $material['name'].";".$material['typeid'].";".$material['quantity'].";".$material['consume']
+            $material['name'].";".$material['typeid'].";".$material['quantity'].";1"
         );
     }
 }

@@ -139,6 +139,7 @@ $(document).ready(function() {
             <div id="Material-blueprint-details">
 
             </div>
+                <h2>Materials for materials</h2>
                 <table border=1 id="mat_materialsTable" class="table table-striped table-bordered">
                     <thead>
                         <tr>
@@ -157,6 +158,20 @@ $(document).ready(function() {
                     <tfoot>
                     </tfoot>
                 </table>
+                <h2>Total Materials</h2>
+                <table border=1 id="allMaterials" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Job Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mat_materialsBody">
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                </table>
+
             </div>
         </div>
     </div>
