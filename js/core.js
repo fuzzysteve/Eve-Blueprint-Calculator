@@ -218,6 +218,37 @@ function loadBlueprint(blueprint)
     $.getJSON(queryurl,function(data){populateTables(data);});
 }
 
+
+function saveFacility()
+{
+    var facility=parseInt($('#facility').val());
+
+    if (facility in facilitymelookup)
+    {
+        facilityme=facilitymelookup[facility];
+        facilityte=facilitytelookup[facility];
+    } else {
+
+        if (facility==5) {
+            rigbonus=1.25;
+            tebonus=parseFloat($('#FacilitySize').val());
+        } else {
+            rigbonus=1;
+            tebonus=1;
+        }
+
+        secstatus=parseFloat($('#SecStatus').val());
+        facilityme=(100-(parseFloat($('#MERig').val())*secstatus*rigbonus))/100;
+        facilityte=((100-(parseFloat($('#TERig').val())*secstatus*rigbonus))/100)*tebonus;
+    }
+
+    runNumbers();
+}
+
+
+
+
+
 function runNumbers()
 {
     inventionCost=0;
@@ -234,9 +265,9 @@ function runNumbers()
     var allMaterials= {};
     for (var materialid in blueprintData.activityMaterials[1]) {
         material=blueprintData.activityMaterials[1][materialid];
-        reducedquantity=material.quantity*(1-(me/100))*facilityme[facility]*(1-(teamMe/100));
-        jobquantity=Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme[facility]*(1-(teamMe/100)))*runs));
-        jobquantityWT=Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme[facility])*runs));
+        reducedquantity=material.quantity*(1-(me/100))*facilityme*(1-(teamMe/100));
+        jobquantity=Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme*(1-(teamMe/100)))*runs));
+        jobquantityWT=Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme)*runs));
         if (material.maketype>0) {
             name='<span onclick="togglebuild('+material.typeid+')" title="Toggle making yourself">M</span> <a href="/blueprint/?typeid='+material.maketype+'" target="_blank">'+material.name+"</a>";
         } else {
@@ -249,8 +280,8 @@ function runNumbers()
                 matme=blueprintData.activityMaterials[1][materialid].me;
                 matte=blueprintData.activityMaterials[1][materialid].te;
                 materialin=blueprintData.activityMaterials[1][materialid].materialdata[matmatid];
-                matreducedquantity=materialin.quantity*(1-(matme/100))*facilityme[parseInt($('#facility-'+materialid).val())];
-                matjobquantity=Math.max(jobquantity,Math.ceil((materialin.quantity*(1-(matme/100))*facilityme[parseInt($('#facility-'+materialid).val())])*jobquantity));
+                matreducedquantity=materialin.quantity*(1-(matme/100))*facilityme;
+                matjobquantity=Math.max(jobquantity,Math.ceil((materialin.quantity*(1-(matme/100))*facilityme)*jobquantity));
                 mat_materials.row.add([
                     name,
                     materialin.name,
@@ -279,7 +310,7 @@ function runNumbers()
                 'N/A',
                 $.number(matTotalPrice,2)
             ]);
-            thistime=blueprintData.activityMaterials[1][materialid].materialtime*jobquantity*(1-(matte/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte[parseInt($('#facility-'+materialid).val())];
+            thistime=blueprintData.activityMaterials[1][materialid].materialtime*jobquantity*(1-(matte/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte;
             thistime=thistime/blueprintData.activityMaterials[1][materialid].materialquantity;
             additionalTime=additionalTime+thistime;
         } else {
@@ -326,7 +357,7 @@ function runNumbers()
         dcmultiplier=1;
     }
 
-    buildTime=blueprintData.blueprintDetails.times[1]*(1-(te/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte[facility]*runs*dcmultiplier;
+    buildTime=blueprintData.blueprintDetails.times[1]*(1-(te/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte*runs*dcmultiplier;
     buildTime=additionalTime+buildTime;
     $('#buildTime').text(String(buildTime).toHHMMSS());
     $('#profit').number(profitNumber,2);
@@ -406,8 +437,8 @@ function runTimeNumbers()
         tecost=tecost+(researchMultiplier[i/2]*runCost*0.02);
     }
 
-    $('#metime').text(String(metime*rfacilityme[rfacility]*(1-(metallurgy*5/100))*(1-((aindustry*3)/100))).toHHMMSS());
-    $('#tetime').text(String(tetime*rfacilityte[rfacility]*(1-(research*5/100))*(1-((aindustry*3)/100))).toHHMMSS());
+    $('#metime').text(String(metime*rfacility*(1-(metallurgy*5/100))*(1-((aindustry*3)/100))).toHHMMSS());
+    $('#tetime').text(String(tetime*rfacility*(1-(research*5/100))*(1-((aindustry*3)/100))).toHHMMSS());
     $('#mecost').number(mecost*indexData.costIndexes["4"]*taxmultiplier,2);
     $('#tecost').number(tecost*indexData.costIndexes["3"]*taxmultiplier,2);
 }
@@ -466,7 +497,7 @@ function saveList() {
     mats=Array();
     for (var materialid in blueprintData.activityMaterials[1]) {
         material=blueprintData.activityMaterials[1][materialid];
-        mats.push({'typeid':material.typeid,'jobquantity':Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme[facility]*(1-(teamMe/100)))*runs))});
+        mats.push({'typeid':material.typeid,'jobquantity':Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facility*(1-(teamMe/100)))*runs))});
     }
     $.post('/blueprint/api/shoppingList/addItems.php',{'nonce':nonce,'listid':$('#shoppingListSelect').val(),'identifier':blueprintData.blueprintDetails.productTypeName,'itemJson':JSON.stringify(mats)},function(data) {
         if (data.status != 'success') {
@@ -493,16 +524,18 @@ var indexData;
 var runCost;
 var currentindex=0;
 var runs=1;
-var facility=1;
+var facilityme=1;
 var rfacility=1;
+var facilityte=1;
 var regionid=10000002;
 var taxRate=0;
 var profitNumber=0;
 var activityNames={'1':'Manufacturing','3':'TE Research','4':'ME research','5':'Copying','7':'Reverse Engineering','8':'Invention'};
-var facilityme={'1':1,'2':0.98,'3':0.85,'4':1.05,5:0.97,6:0.955,7:0.95,8:0.964,9:0.94,10:0.976,11:0.964,12:0.96,13:0.9712,14:0.9568,15:0.952};
-var facilityte={'1':1,'2':0.75,'3':0.75,'4':0.65};
-var rfacilityme={'1':1,'2':0.7,'3':0.65,'4':Infinity};
-var rfacilityte={'1':1,'2':0.7,'3':0.65,'4':Infinity};
+var facilitymelookup={'1':1,'2':0.98,'3':0.85,'4':1.05};
+//,5:0.97,6:0.955,7:0.95,8:0.964,9:0.94,10:0.976,11:0.964,12:0.96,13:0.9712,14:0.9568,15:0.952};
+var facilitytelookup={'1':1,'2':0.75,'3':0.75,'4':0.65};
+//var rfacilityme={'1':1,'2':0.7,'3':0.65,'4':Infinity};
+//var rfacilityte={'1':1,'2':0.7,'3':0.65,'4':Infinity};
 var researchMultiplier=[1,29/21,23/7,39/5,278/15,928/21,2200/21,5251/21,4163/7,29660/21];
 var teamMe=0;
 var teamTe=0;

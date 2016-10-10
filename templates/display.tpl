@@ -55,20 +55,40 @@ $(document).ready(function() {
         <div class="panel-heading"><h1 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#facility_div" href="#collapseFacilities">Facility</a></h1></div>
         <div id="collapseFacilities" class="panel-collapse collapse in">
             <div class="panel-body">
-                <label for="facility">Manufacturing Facility</label>
-                <select name="facility" id="facility" onchange='facility=parseFloat($("#facility").val());runNumbers();'>
+                <label for="facility">Facility</label>
+                <select name="facility" id="facility" onchange='saveFacility();'>
                     <option value="1">Station</option>
                     <option value="2">Assembly Array</option>
                     <option value="3">Thukker Component Array</option>
                     <option value="4">Rapid Assembly Array</option>
+                    <option value="5">Engineering Complex</option>
+                    <option value="6">Other Structure</option>
                 </select>
-                <label for="rFacility">Research Facility</label>
-                <select name="rfacility" id="rfacility" onchange='rfacility=$("#rfacility").val();runTimeNumbers();'>
-                    <option value="1">Station</option>
-                    <option value="2">Mobile Lab</option>
-                    <option value="3">Hyasyoda Mobile Lab TE</option>
-                    <option value="4">Design Lab</option>
+                <label for="SecStatus">Sec Status</label>
+                <select name="SecStatus" id="SecStatus" onchange='saveFacility();'>
+                    <option value="0.6">High Sec</option>
+                    <option value="0.9">Low Sec</option>
+                    <option value="1">Null Sec/WH</option>
                 </select>
+                <label for="FacilitySize">Structure Size</label>
+                <select name="FacilitySize" id="FacilitySize" onchange='saveFacility();'>
+                    <option value="0.95">Medium</option>
+                    <option value="0.90">Large</option>
+                    <option value="0.85">X-Large</option>
+                </select>
+                <label for="MERig">Material Rig type</label>
+                <select name="MERig" id="MERig" onchange='saveFacility();'>
+                    <option value="0">No Rig</option>
+                    <option value="4">T1 Rig</option>
+                    <option value="4.8">T2 Rig</option>
+                </select>
+                <label for="TERig">Time type</label>
+                <select name="TERig" id="TERig" onchange='saveFacility();'>
+                    <option value="0">No Rig</option>
+                    <option value="40">T1 Rig</option>
+                    <option value="48">T2 Rig</option>
+                </select>
+                    
 <br>
                 <label for="taxRate">Facility Tax Rate</label><input type=text value=0 name="taxRate" id="taxRate">
                 <label for="systemName">SystemName</label><input type=text value="Jita" name="system" id="systemName">

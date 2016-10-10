@@ -36,10 +36,15 @@ use EveBlueprint\EveBlueprint;
 use EveCharacter\EveCharacter;
 
 $character= new EveCharacter(5);
-$blueprint= new EveBlueprint($dbh, $itemid);
+try {
+    $blueprint= new EveBlueprint($dbh, $itemid);
+} catch (Exception $e) {
+    echo '{"requestedid":'.$itemid.'}';
+    exit;
+}
 $returnarray=array();
 
-
+$returnarray["requestedid"]=$itemid;
 $returnarray['blueprintSkills']=$blueprint->blueprintSkills();
 $returnarray['blueprintDetails']=$blueprint->blueprintDetails();
 $returnarray['activityMaterials']=$blueprint->activityMaterials();
