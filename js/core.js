@@ -4,12 +4,12 @@ function populateTables(blueprintJson)
     $('#Material-blueprint-details').empty();
     materials=$('#materialsTable').DataTable();
     materials.rows().remove(); 
-    $("#facilities").attr('title',blueprintData.blueprintDetails['facilities'].join("\n"));
-    for (materialid in blueprintData['activityMaterials'][1]) {
-        blueprintData['activityMaterials'][1][materialid]['make']=0;
-        blueprintData['activityMaterials'][1][materialid]['me']=0;
-        blueprintData['activityMaterials'][1][materialid]['te']=0;
-        material=blueprintData['activityMaterials'][1][materialid];
+    $("#facilities").attr('title',blueprintData.blueprintDetails.facilities.join("\n"));
+    for (var materialid in blueprintData.activityMaterials[1]) {
+        blueprintData.activityMaterials[1][materialid].make=0;
+        blueprintData.activityMaterials[1][materialid].me=0;
+        blueprintData.activityMaterials[1][materialid].te=0;
+        material=blueprintData.activityMaterials[1][materialid];
         var newrow='';
         if (material.maketype>0) {
             newrow=materials.row.add([material.typeid,'<a href="blueprint/?typeid='+material.maketype+'">'+material.name+"</a>",material.quantity,0,0,0,0,0]).draw().node();
@@ -27,25 +27,25 @@ function populateTables(blueprintJson)
     catch(err) { console.log("No pushstate");}
     skills=$("#skillsTable").DataTable();
     skills.rows().remove();
-    for (activity in blueprintData.blueprintSkills) {
-        for (skill in blueprintData.blueprintSkills[activity]) {
+    for (var activity in blueprintData.blueprintSkills) {
+        for (var skill in blueprintData.blueprintSkills[activity]) {
             skills.row.add([activityNames[activity],blueprintData.blueprintSkills[activity][skill].name,blueprintData.blueprintSkills[activity][skill].level]);
         }
     }
     skills.draw();
 
-    if (blueprintData.blueprintDetails.techLevel==2 && ('8' in blueprintData['activityMaterials'])) {
+    if (blueprintData.blueprintDetails.techLevel==2 && ('8' in blueprintData.activityMaterials)) {
         invention=$('#inventionCosts').DataTable();
         invention.rows().remove();
-        for (materialid in blueprintData['activityMaterials'][8]) {
-             material=blueprintData['activityMaterials'][8][materialid];
-             var newrow=invention.row.add([
+        for (materialid in blueprintData.activityMaterials[8]) {
+             material=blueprintData.activityMaterials[8][materialid];
+             var inventionnewrow=invention.row.add([
                 material.name,
                 material.quantity,
                 'Yes',
                 0
             ]).draw().node();
-            $(newrow).attr('id', 'inventionmaterial-'+material.typeid);
+            $(inventionnewrow).attr('id', 'inventionmaterial-'+material.typeid);
         }
         $("#invention_div").show();
         $("#inventioncosttr").show();
@@ -73,19 +73,19 @@ function populateTables(blueprintJson)
 
 
 function togglebuild(materialid){
-    for (materid in blueprintData['activityMaterials'][1]) {
-        if (blueprintData['activityMaterials'][1][materid].typeid==materialid) {
+    for (var materid in blueprintData.activityMaterials[1]) {
+        if (blueprintData.activityMaterials[1][materid].typeid==materialid) {
             matid=materid;
         }
     }
-    if (typeof blueprintData['activityMaterials'][1][matid]['materialdata'] == 'undefined')
+    if (typeof blueprintData.activityMaterials[1][matid].materialdata == 'undefined')
     {
         getMatMaterials(materialid);
     } else {
-        if (blueprintData['activityMaterials'][1][matid]['make']){
-            blueprintData['activityMaterials'][1][matid]['make']=0;
+        if (blueprintData.activityMaterials[1][matid].make){
+            blueprintData.activityMaterials[1][matid].make=0;
         } else {
-            blueprintData['activityMaterials'][1][matid]['make']=1;
+            blueprintData.activityMaterials[1][matid].make=1;
         }
         runNumbers();
     }
@@ -97,19 +97,19 @@ function getMatMaterials(materialid) {
 }
 
 function getMatMaterials2(materialid,blueprintdetails) {
-    for (materid in blueprintData['activityMaterials'][1]) {
-        if (blueprintData['activityMaterials'][1][materid].typeid==materialid) {
+    for (var aterid in blueprintData.activityMaterials[1]) {
+        if (blueprintData.activityMaterials[1][materid].typeid==materialid) {
             matid=materid;
         }
     }
-    blueprintData['activityMaterials'][1][matid]['materialdata']=blueprintdetails['activityMaterials'][1];
-    blueprintData['activityMaterials'][1][matid]['materialtime']=blueprintdetails['blueprintDetails']['times'][1];
-    blueprintData['activityMaterials'][1][matid]['materialquantity']=blueprintdetails['blueprintDetails']['productQuantity'];
-    blueprintData['activityMaterials'][1][matid]['make']=1;
+    blueprintData.activityMaterials[1][matid].materialdata=blueprintdetails.activityMaterials[1];
+    blueprintData.activityMaterials[1][matid].materialtime=blueprintdetails.blueprintDetails.times[1];
+    blueprintData.activityMaterials[1][matid].materialquantity=blueprintdetails.blueprintDetails.productQuantity;
+    blueprintData.activityMaterials[1][matid].make=1;
 
     p = document.createElement('p');
     label = document.createElement('label');
-    text = document.createTextNode(blueprintdetails['blueprintDetails']['productTypeName']+" ME:");
+    text = document.createTextNode(blueprintdetails.blueprintDetails.productTypeName+" ME:");
     input = document.createElement('input');
     label.appendChild(text);
     label.setAttribute("for", "spin-me-"+matid);
@@ -132,8 +132,8 @@ function getMatMaterials2(materialid,blueprintdetails) {
     $('#Material-blueprint-details').append('<select id="facility-'+matid+'" onchange="runNumbers();"> <option value="1" selected>Station</option><option value="2">Assembly Array</option><option value="3">Thukker Component Array</option><option value="4">Rapid Assembly Array</option></select>');
     $("#spin-me-"+matid).data("matid",matid);
     $("#spin-te-"+matid).data("matid",matid);
-    $("#spin-me-"+matid).spinner({min:0,max:10,spin:function(event,ui){blueprintData['activityMaterials'][1][$(this).data("matid")]['me']=parseInt(ui.value);runNumbers();},change:function(event,ui){blueprintData['activityMaterials'][1][$(this).data("matid")]['me']=parseInt($(this).val());runNumbers();}});
-    $("#spin-te-"+matid).spinner({min:0,max:20,spin:function(event,ui){blueprintData['activityMaterials'][1][$(this).data("matid")]['te']=parseInt(ui.value);runNumbers();},change:function(event,ui){blueprintData['activityMaterials'][1][$(this).data("matid")]['te']=parseInt($(this).val());runNumbers();}});
+    $("#spin-me-"+matid).spinner({min:0,max:10,spin:function(event,ui){blueprintData.activityMaterials[1][$(this).data("matid")].me=parseInt(ui.value);runNumbers();},change:function(event,ui){blueprintData.activityMaterials[1][$(this).data("matid")].me=parseInt($(this).val());runNumbers();}});
+    $("#spin-te-"+matid).spinner({min:0,max:20,spin:function(event,ui){blueprintData.activityMaterials[1][$(this).data("matid")].te=parseInt(ui.value);runNumbers();},change:function(event,ui){blueprintData.activityMaterials[1][$(this).data("matid")].te=parseInt($(this).val());runNumbers();}});
     generateMaterialList();
     loadPrices();
 }
@@ -142,30 +142,30 @@ function getMatMaterials2(materialid,blueprintdetails) {
 
 function generateMaterialList()
 {
-    materialList=new Array();
-    materialNames=new Object();
-    materialNames[parseInt(blueprintData['blueprintDetails']['productTypeID'])]=blueprintData['blueprintDetails']['productTypeName'];
-    for (activityid in blueprintData['activityMaterials']) {
-        activity=blueprintData['activityMaterials'][activityid];
-        for (materialid in activity) {
+    materialList=[];
+    materialNames={};
+    materialNames[parseInt(blueprintData.blueprintDetails.productTypeID)]=blueprintData.blueprintDetails.productTypeName;
+    for (var activityid in blueprintData.activityMaterials) {
+        activity=blueprintData.activityMaterials[activityid];
+        for (var materialid in activity) {
             materialNames[activity[materialid].typeid]=activity[materialid].name;
-            if (typeof activity[materialid]['materialdata'] !== 'undefined')
+            if (typeof activity[materialid].materialdata !== 'undefined')
             {
-                for (materialid2 in activity[materialid]['materialdata']) {
-                    materialNames[activity[materialid]['materialdata'][materialid2].typeid]=activity[materialid]['materialdata'][materialid2].name;
+                for (var materialid2 in activity[materialid].materialdata) {
+                    materialNames[activity[materialid].materialdata[materialid2].typeid]=activity[materialid].materialdata[materialid2].name;
                 }
             }
         }
     }
-    for (metaid in blueprintData['metaVersions']) {
-        materialNames[parseInt(blueprintData['metaVersions'][metaid].typeid)]=blueprintData['metaVersions'][metaid].name;
+    for (var metaid in blueprintData.metaVersions) {
+        materialNames[parseInt(blueprintData.metaVersions[metaid].typeid)]=blueprintData.metaVersions[metaid].name;
     }
-    for (decid in blueprintData['decryptors']) {
-        materialNames[parseInt(blueprintData['decryptors'][decid].typeid)]=blueprintData['decryptors'][decid].name;
+    for (var decid in blueprintData.decryptors) {
+        materialNames[parseInt(blueprintData.decryptors[decid].typeid)]=blueprintData.decryptors[decid].name;
     }
 
-    for (materialid in materialNames) {
-        materialList.push(materialid);
+    for (var matid in materialNames) {
+        materialList.push(matid);
     }
 
 }
@@ -175,7 +175,7 @@ function populatePrices(pricejson) {
     prices=$('#priceTable').DataTable();
     prices.rows().remove();
 
-    for (materialid in materialList) {
+    for (var materialid in materialList) {
         typeid=materialList[materialid];
         prices.row.add([materialNames[typeid],$.number(priceData[typeid].sell,2),$.number(priceData[typeid].buy,2),$.number(priceData[typeid].adjusted,2)]);
     }
@@ -188,7 +188,7 @@ function populateIndexes(indexJson) {
     currentindex=$('#systemName').val();
     cit=$("#costIndexTable").DataTable();
     cit.rows().remove();
-    for (activity in indexJson.costIndexes) {
+    for (var activity in indexJson.costIndexes) {
         cit.row.add([activityNames[activity],$.number(indexJson.costIndexes[activity],5)]);
     }
     cit.draw();
@@ -207,7 +207,7 @@ function loadIndexes()
 
 function loadPrices()
 {
-    queryurl="https://www.fuzzwork.co.uk/blueprint/api/prices.php?regionid="+regionid+"&typeids="+JSON.stringify(materialList)
+    queryurl="https://www.fuzzwork.co.uk/blueprint/api/prices.php?regionid="+regionid+"&typeids="+JSON.stringify(materialList);
      $.getJSON(queryurl,function(data){populatePrices(data);});
 }
 
@@ -231,24 +231,24 @@ function runNumbers()
     runCost=0;
     taxmultiplier=(taxRate/100)+1;
     additionalTime=0;
-    var allMaterials= new Object()
-    for (materialid in blueprintData['activityMaterials'][1]) {
-        material=blueprintData['activityMaterials'][1][materialid];
+    var allMaterials= {};
+    for (var materialid in blueprintData.activityMaterials[1]) {
+        material=blueprintData.activityMaterials[1][materialid];
         reducedquantity=material.quantity*(1-(me/100))*facilityme[facility]*(1-(teamMe/100));
         jobquantity=Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme[facility]*(1-(teamMe/100)))*runs));
         jobquantityWT=Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme[facility])*runs));
         if (material.maketype>0) {
             name='<span onclick="togglebuild('+material.typeid+')" title="Toggle making yourself">M</span> <a href="/blueprint/?typeid='+material.maketype+'" target="_blank">'+material.name+"</a>";
         } else {
-            name=material.name
+            name=material.name;
         }
-        if (material['make']==1) {
+        if (material.make==1) {
             matTotalPrice=0;
             matRunCost=0;
-            for (matmatid in blueprintData['activityMaterials'][1][materialid]['materialdata']) {
-                matme=blueprintData['activityMaterials'][1][materialid]['me'];
-                matte=blueprintData['activityMaterials'][1][materialid]['te'];
-                materialin=blueprintData['activityMaterials'][1][materialid]['materialdata'][matmatid];
+            for (var matmatid in blueprintData.activityMaterials[1][materialid].materialdata) {
+                matme=blueprintData.activityMaterials[1][materialid].me;
+                matte=blueprintData.activityMaterials[1][materialid].te;
+                materialin=blueprintData.activityMaterials[1][materialid].materialdata[matmatid];
                 matreducedquantity=materialin.quantity*(1-(matme/100))*facilityme[parseInt($('#facility-'+materialid).val())];
                 matjobquantity=Math.max(jobquantity,Math.ceil((materialin.quantity*(1-(matme/100))*facilityme[parseInt($('#facility-'+materialid).val())])*jobquantity));
                 mat_materials.row.add([
@@ -260,13 +260,13 @@ function runNumbers()
                     $.number(priceData[materialin.typeid].sell,2),
                     $.number(priceData[materialin.typeid].adjusted,2),
                     $.number(priceData[materialin.typeid].sell*matjobquantity,2)
-                ])
-                matTotalPrice=matTotalPrice+priceData[materialin.typeid].sell*matjobquantity/blueprintData['activityMaterials'][1][materialid]['materialquantity'];
+                ]);
+                matTotalPrice=matTotalPrice+priceData[materialin.typeid].sell*matjobquantity/blueprintData.activityMaterials[1][materialid].materialquantity;
                 matRunCost=matRunCost+priceData[materialin.typeid].adjusted*materialin.quantity*runs*jobquantity;
                 allMaterials[materialin.typeid]=(typeof allMaterials[materialin.typeid] == "undefined")?matjobquantity:allMaterials[materialin.typeid]+matjobquantity;
             }
-            totalPriceWT=totalPriceWT+matTotalPrice
-            totalPrice=totalPrice+matTotalPrice
+            totalPriceWT=totalPriceWT+matTotalPrice;
+            totalPrice=totalPrice+matTotalPrice;
             runCost=runCost+(priceData[material.typeid].adjusted*material.quantity*runs);
             runCost=runCost+matRunCost;
             materials.row($('#material-'+material.typeid)).data([
@@ -279,8 +279,8 @@ function runNumbers()
                 'N/A',
                 $.number(matTotalPrice,2)
             ]);
-            thistime=blueprintData['activityMaterials'][1][materialid]['materialtime']*jobquantity*(1-(matte/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte[parseInt($('#facility-'+materialid).val())];
-            thistime=thistime/blueprintData['activityMaterials'][1][materialid]['materialquantity'];
+            thistime=blueprintData.activityMaterials[1][materialid].materialtime*jobquantity*(1-(matte/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte[parseInt($('#facility-'+materialid).val())];
+            thistime=thistime/blueprintData.activityMaterials[1][materialid].materialquantity;
             additionalTime=additionalTime+thistime;
         } else {
             materials.row($('#material-'+material.typeid)).data([
@@ -301,7 +301,7 @@ function runNumbers()
     }
     allmat=$('#allMaterials').DataTable();
     allmat.clear();
-    for (matid in allMaterials) {
+    for (var matid in allMaterials) {
             allmat.row.add([
                 materialNames[matid],
                 allMaterials[matid]
@@ -318,16 +318,16 @@ function runNumbers()
     $('#installCost').number((runCost*indexData.costIndexes["1"])*taxmultiplier*(1+(salary/100)),2);
     $('#teamCost').number((runCost*indexData.costIndexes["1"])*taxmultiplier*(salary/100),2);
     profitNumber=(((priceData[blueprintData.blueprintDetails.productTypeID].sell*blueprintData.blueprintDetails.productQuantity*runs)-totalPrice)-(runCost*indexData.costIndexes["1"]*taxmultiplier*(1+(salary/100))))-inventionCost;
-    if (blueprintData.blueprintDetails.techLevel==2 && ('8' in blueprintData['activityMaterials'])) {
+    if (blueprintData.blueprintDetails.techLevel==2 && ('8' in blueprintData.activityMaterials)) {
         dc1skill=parseInt($("#dc1skill").val());
         dc2skill=parseInt($("#dc2skill").val());
-        dcmultiplier=(1-(dc1skill/100))*(1-(dc2skill/100))
+        dcmultiplier=(1-(dc1skill/100))*(1-(dc2skill/100));
     } else {
         dcmultiplier=1;
     }
 
     buildTime=blueprintData.blueprintDetails.times[1]*(1-(te/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte[facility]*runs*dcmultiplier;
-    buildTime=additionalTime+buildTime
+    buildTime=additionalTime+buildTime;
     $('#buildTime').text(String(buildTime).toHHMMSS());
     $('#profit').number(profitNumber,2);
     $('#iskhr').number((profitNumber/buildTime)*3600,2);
@@ -341,31 +341,31 @@ function runNumbers()
 
 function inventionNumbers()
 {
-     if (blueprintData.blueprintDetails.techLevel==2 && ('8' in blueprintData['activityMaterials'])) {
+     if (blueprintData.blueprintDetails.techLevel==2 && ('8' in blueprintData.activityMaterials)) {
         encryptionskill=parseInt($("#encryption").val()); 
         dc1skill=parseInt($("#dc1skill").val()); 
         dc2skill=parseInt($("#dc2skill").val()); 
         decryptor=parseInt($('#decryptors input[type="radio"]:checked').val());
         decryptormult=1;
         if (decryptor>-1) {
-            decryptormult=blueprintData['decryptors'][decryptor].multiplier;
+            decryptormult=blueprintData.decryptors[decryptor].multiplier;
         }
         taxmultiplier=(taxRate/100)+1;
         inventionChance=Math.min(((blueprintData.blueprintDetails.probability*100) * (1 + ((dc1skill+dc2skill)/30)+(encryptionskill/40)))*decryptormult,100);
         invention=$('#inventionCosts').DataTable();
         $("#inventionProbability").number(inventionChance,1);
-        for (materialid in blueprintData['activityMaterials'][8]) {
-            material=blueprintData['activityMaterials'][8][materialid];
+        for (var materialid in blueprintData.activityMaterials[8]) {
+            material=blueprintData.activityMaterials[8][materialid];
             inventionCost=inventionCost+Math.ceil((material.quantity*priceData[material.typeid].sell));
             invention.row($('#inventionmaterial-'+material.typeid)).data([material.name, material.quantity,'Yes',$.number(Math.ceil((material.quantity*priceData[material.typeid].sell)/(inventionChance/100)))]);
         }
         invention.draw();
         blueprintcost=blueprintData.blueprintDetails.precursorAdjustedPrice*indexData.costIndexes["5"]*0.02;
-        $('#blueprintCost').number(blueprintcost)
+        $('#blueprintCost').number(blueprintcost);
         $('#inventionInstall').number(((runCost/runs)*0.02*indexData.costIndexes["8"])*taxmultiplier);
         if (decryptor>-1)
         {
-            inventionCost=inventionCost+(priceData[blueprintData['decryptors'][decryptor].typeid].sell);
+            inventionCost=inventionCost+(priceData[blueprintData.decryptors[decryptor].typeid].sell);
         }
         inventionCost=inventionCost+blueprintcost;
         inventionCost=inventionCost/(inventionChance/100);
@@ -394,7 +394,7 @@ function runTimeNumbers()
     teRes[0]=parseInt(teRes[0]);
     teRes[1]=parseInt(teRes[1]);
     metime=0;
-    mecost=0
+    mecost=0;
     tetime=0;
     tecost=0;
     for(i=meRes[0];i<meRes[1];i++) {
@@ -414,12 +414,12 @@ function runTimeNumbers()
 
 $.urlParam = function(name){
     var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
-    if (results==null) {
+    if (results===null) {
         return null;
     } else {
         return results[1] || 0;
     }
-}
+};
 
 
 function loadLists() {
@@ -464,8 +464,8 @@ function saveList() {
         return;
     }
     mats=Array();
-    for (materialid in blueprintData['activityMaterials'][1]) {
-        material=blueprintData['activityMaterials'][1][materialid];
+    for (var materialid in blueprintData.activityMaterials[1]) {
+        material=blueprintData.activityMaterials[1][materialid];
         mats.push({'typeid':material.typeid,'jobquantity':Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme[facility]*(1-(teamMe/100)))*runs))});
     }
     $.post('/blueprint/api/shoppingList/addItems.php',{'nonce':nonce,'listid':$('#shoppingListSelect').val(),'identifier':blueprintData.blueprintDetails.productTypeName,'itemJson':JSON.stringify(mats)},function(data) {
@@ -481,8 +481,6 @@ function saveList() {
 
 var te=0;
 var me=0;
-var teamTe=0
-var teamMe=0
 var industry=5;
 var aindustry=5;
 var research=5;
@@ -501,10 +499,10 @@ var regionid=10000002;
 var taxRate=0;
 var profitNumber=0;
 var activityNames={'1':'Manufacturing','3':'TE Research','4':'ME research','5':'Copying','7':'Reverse Engineering','8':'Invention'};
-var facilityme={'1':1,'2':0.98,'3':0.85,'4':1.05};
+var facilityme={'1':1,'2':0.98,'3':0.85,'4':1.05,5:0.97,6:0.955,7:0.95,8:0.964,9:0.94,10:0.976,11:0.964,12:0.96,13:0.9712,14:0.9568,15:0.952};
 var facilityte={'1':1,'2':0.75,'3':0.75,'4':0.65};
-var rfacilityme={'1':1,'2':0.7,'3':0.65,'4':Infinity}
-var rfacilityte={'1':1,'2':0.7,'3':0.65,'4':Infinity}
+var rfacilityme={'1':1,'2':0.7,'3':0.65,'4':Infinity};
+var rfacilityte={'1':1,'2':0.7,'3':0.65,'4':Infinity};
 var researchMultiplier=[1,29/21,23/7,39/5,278/15,928/21,2200/21,5251/21,4163/7,29660/21];
 var teamMe=0;
 var teamTe=0;
