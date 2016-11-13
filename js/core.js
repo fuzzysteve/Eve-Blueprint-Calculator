@@ -129,11 +129,13 @@ function getMatMaterials2(materialid,blueprintdetails) {
     input.setAttribute("value", 20);
     p.appendChild(input);
     $('#Material-blueprint-details').append(p);
-    $('#Material-blueprint-details').append('<label for="facility-'+matid+'">Facility</label><select name="facility-'+matid+'" id="facility" onchange=\'saveFacility('+matid+');\'><option value="1">Station</option><option value="2">Assembly Array</option><option value="3">Thukker Component Array</option><option value="4">Rapid Assembly Array</option><option value="5">Engineering Complex</option><option value="6">Other Structure</option></select><label for="SecStatus-'+matid+'">Sec Status</label><select name="SecStatus-'+matid+'" id="SecStatus" onchange=\'saveFacility('+matid+');\'><option value="1">High Sec</option><option value="1.9">Low Sec</option><option value="2.1">Null Sec/WH</option></select><label for="FacilitySize-'+matid+'">Structure Size</label><select name="FacilitySize-'+matid+'" id="FacilitySize" onchange=\'saveFacility('+matid+');\'><option value="1">Medium</option><option value="2">Large</option><option value="3">X-Large</option></select><label for="MERig-'+matid+'">Material Rig type</label><select name="MERig-'+matid+'" id="MERig" onchange=\'saveFacility('+matid+');\'><option value="0">No Rig</option><option value="2">T1 Rig</option><option value="2.4">T2 Rig</option></select><label for="TERig-'+matid+'">Time type</label><select name="TERig-'+matid+'" id="TERig" onchange=\'saveFacility('+matid+');\'><option value="0">No Rig</option><option value="20">T1 Rig</option><option value="24">T2 Rig</option></select>');
+    $('#Material-blueprint-details').append('<label for="facility-'+matid+'">Facility</label><select name="facility-'+matid+'" id="facility-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="1">Station</option><option value="2">Assembly Array</option><option value="3">Thukker Component Array</option><option value="4">Rapid Assembly Array</option><option value="5">Engineering Complex</option><option value="6">Other Structure</option></select><label for="SecStatus-'+matid+'">Sec Status</label><select name="SecStatus-'+matid+'" id="SecStatus-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="1">High Sec</option><option value="1.9">Low Sec</option><option value="2.1">Null Sec/WH</option></select><label for="FacilitySize-'+matid+'">Structure Size</label><select name="FacilitySize-'+matid+'" id="FacilitySize-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="1">Medium</option><option value="2">Large</option><option value="3">X-Large</option></select><label for="MERig-'+matid+'">Material Rig type</label><select name="MERig-'+matid+'" id="MERig-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="0">No Rig</option><option value="2">T1 Rig</option><option value="2.4">T2 Rig</option></select><label for="TERig-'+matid+'">Time type</label><select name="TERig-'+matid+'" id="TERig-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="0">No Rig</option><option value="20">T1 Rig</option><option value="24">T2 Rig</option></select>');
     $("#spin-me-"+matid).data("matid",matid);
     $("#spin-te-"+matid).data("matid",matid);
     $("#spin-me-"+matid).spinner({min:0,max:10,spin:function(event,ui){blueprintData.activityMaterials[1][$(this).data("matid")].me=parseInt(ui.value);runNumbers();},change:function(event,ui){blueprintData.activityMaterials[1][$(this).data("matid")].me=parseInt($(this).val());runNumbers();}});
     $("#spin-te-"+matid).spinner({min:0,max:20,spin:function(event,ui){blueprintData.activityMaterials[1][$(this).data("matid")].te=parseInt(ui.value);runNumbers();},change:function(event,ui){blueprintData.activityMaterials[1][$(this).data("matid")].te=parseInt($(this).val());runNumbers();}});
+    mfacilityme[matid]=1;
+    mfacilityte[matid]=1;
     generateMaterialList();
     loadPrices();
 }
@@ -219,19 +221,27 @@ function loadBlueprint(blueprint)
 }
 
 
-function saveFacility()
+function saveFacility(materialid)
 {
-    var facility=parseInt($('#facility').val());
+
+    var fsuffix='';
+    if (typeof materialid == 'undefined') {
+        fsuffix='';
+    } else {
+        fsuffix='-'+materialid;
+    }
+
+    var facility=parseInt($('#facility'+fsuffix).val());
 
     if (facility in facilitymelookup)
     {
-        facilityme=facilitymelookup[facility];
-        facilityte=facilitytelookup[facility];
+        lfacilityme=facilitymelookup[facility];
+        lfacilityte=facilitytelookup[facility];
     } else {
 
         if (facility==5) {
             facilitymemod=0.99;
-            switch (parseInt($('#FacilitySize').val())) {
+            switch (parseInt($('#FacilitySize'+fsuffix).val())) {
                 case 1:
                     tebonus=0.85;
                     break;
@@ -247,9 +257,17 @@ function saveFacility()
             tebonus=1;
         }
 
-        secstatus=parseFloat($('#SecStatus').val());
-        facilityme=((100-(parseFloat($('#MERig').val())*secstatus))/100)*facilitymemod;
-        facilityte=((100-(parseFloat($('#TERig').val())*secstatus))/100)*tebonus;
+        secstatus=parseFloat($('#SecStatus'+fsuffix).val());
+        lfacilityme=((100-(parseFloat($('#MERig'+fsuffix).val())*secstatus))/100)*facilitymemod;
+        lfacilityte=((100-(parseFloat($('#TERig'+fsuffix).val())*secstatus))/100)*tebonus;
+    }
+
+    if (typeof materialid == 'undefined') {
+        facilityme=lfacilityme;
+        facilityte=lfacilityte;
+    } else {
+        mfacilityme[materialid]=lfacilityme;
+        mfacilityte[materialid]=lfacilityte;
     }
 
     runNumbers();
@@ -536,6 +554,8 @@ var runs=1;
 var facilityme=1;
 var rfacility=1;
 var facilityte=1;
+var mfacilityme=[];
+var mfacilityte=[];
 var regionid=10000002;
 var taxRate=0;
 var profitNumber=0;
