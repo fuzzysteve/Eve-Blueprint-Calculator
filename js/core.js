@@ -97,7 +97,7 @@ function getMatMaterials(materialid) {
 }
 
 function getMatMaterials2(materialid,blueprintdetails) {
-    for (var aterid in blueprintData.activityMaterials[1]) {
+    for (var materid in blueprintData.activityMaterials[1]) {
         if (blueprintData.activityMaterials[1][materid].typeid==materialid) {
             matid=materid;
         }
@@ -129,7 +129,7 @@ function getMatMaterials2(materialid,blueprintdetails) {
     input.setAttribute("value", 20);
     p.appendChild(input);
     $('#Material-blueprint-details').append(p);
-    $('#Material-blueprint-details').append('<select id="facility-'+matid+'" onchange="runNumbers();"> <option value="1" selected>Station</option><option value="2">Assembly Array</option><option value="3">Thukker Component Array</option><option value="4">Rapid Assembly Array</option></select>');
+    $('#Material-blueprint-details').append('<label for="facility-'+matid+'">Facility</label><select name="facility-'+matid+'" id="facility" onchange=\'saveFacility('+matid+');\'><option value="1">Station</option><option value="2">Assembly Array</option><option value="3">Thukker Component Array</option><option value="4">Rapid Assembly Array</option><option value="5">Engineering Complex</option><option value="6">Other Structure</option></select><label for="SecStatus-'+matid+'">Sec Status</label><select name="SecStatus-'+matid+'" id="SecStatus" onchange=\'saveFacility('+matid+');\'><option value="1">High Sec</option><option value="1.9">Low Sec</option><option value="2.1">Null Sec/WH</option></select><label for="FacilitySize-'+matid+'">Structure Size</label><select name="FacilitySize-'+matid+'" id="FacilitySize" onchange=\'saveFacility('+matid+');\'><option value="1">Medium</option><option value="2">Large</option><option value="3">X-Large</option></select><label for="MERig-'+matid+'">Material Rig type</label><select name="MERig-'+matid+'" id="MERig" onchange=\'saveFacility('+matid+');\'><option value="0">No Rig</option><option value="2">T1 Rig</option><option value="2.4">T2 Rig</option></select><label for="TERig-'+matid+'">Time type</label><select name="TERig-'+matid+'" id="TERig" onchange=\'saveFacility('+matid+');\'><option value="0">No Rig</option><option value="20">T1 Rig</option><option value="24">T2 Rig</option></select>');
     $("#spin-me-"+matid).data("matid",matid);
     $("#spin-te-"+matid).data("matid",matid);
     $("#spin-me-"+matid).spinner({min:0,max:10,spin:function(event,ui){blueprintData.activityMaterials[1][$(this).data("matid")].me=parseInt(ui.value);runNumbers();},change:function(event,ui){blueprintData.activityMaterials[1][$(this).data("matid")].me=parseInt($(this).val());runNumbers();}});
@@ -230,16 +230,26 @@ function saveFacility()
     } else {
 
         if (facility==5) {
-            rigbonus=1.25;
-            tebonus=parseFloat($('#FacilitySize').val());
+            facilitymemod=0.99;
+            switch (parseInt($('#FacilitySize').val())) {
+                case 1:
+                    tebonus=0.85;
+                    break;
+                case 2:
+                    tebonus=0.80;
+                    break;
+                case 3:
+                    tebonus=0.75;
+                    break;
+            }
         } else {
-            rigbonus=1;
+            facilitymemod=1;
             tebonus=1;
         }
 
         secstatus=parseFloat($('#SecStatus').val());
-        facilityme=(100-(parseFloat($('#MERig').val())*secstatus*rigbonus))/100;
-        facilityte=((100-(parseFloat($('#TERig').val())*secstatus*rigbonus))/100)*tebonus;
+        facilityme=((100-(parseFloat($('#MERig').val())*secstatus))/100)*facilitymemod;
+        facilityte=((100-(parseFloat($('#TERig').val())*secstatus))/100)*tebonus;
     }
 
     runNumbers();
@@ -265,8 +275,8 @@ function runNumbers()
     var allMaterials= {};
     for (var materialid in blueprintData.activityMaterials[1]) {
         material=blueprintData.activityMaterials[1][materialid];
-        reducedquantity=material.quantity*(1-(me/100))*facilityme*(1-(teamMe/100));
-        jobquantity=Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme*(1-(teamMe/100)))*runs));
+        reducedquantity=material.quantity*(1-(me/100))*facilityme;
+        jobquantity=Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme)*runs));
         jobquantityWT=Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme)*runs));
         if (material.maketype>0) {
             name='<span onclick="togglebuild('+material.typeid+')" title="Toggle making yourself">M</span> <a href="/blueprint/?typeid='+material.maketype+'" target="_blank">'+material.name+"</a>";
@@ -347,7 +357,6 @@ function runNumbers()
     $('#jobCost').number(totalPrice,2);
     $('#adjustedCost').number(runCost,2);
     $('#installCost').number((runCost*indexData.costIndexes["1"])*taxmultiplier*(1+(salary/100)),2);
-    $('#teamCost').number((runCost*indexData.costIndexes["1"])*taxmultiplier*(salary/100),2);
     profitNumber=(((priceData[blueprintData.blueprintDetails.productTypeID].sell*blueprintData.blueprintDetails.productQuantity*runs)-totalPrice)-(runCost*indexData.costIndexes["1"]*taxmultiplier*(1+(salary/100))))-inventionCost;
     if (blueprintData.blueprintDetails.techLevel==2 && ('8' in blueprintData.activityMaterials)) {
         dc1skill=parseInt($("#dc1skill").val());
@@ -497,7 +506,7 @@ function saveList() {
     mats=Array();
     for (var materialid in blueprintData.activityMaterials[1]) {
         material=blueprintData.activityMaterials[1][materialid];
-        mats.push({'typeid':material.typeid,'jobquantity':Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facility*(1-(teamMe/100)))*runs))});
+        mats.push({'typeid':material.typeid,'jobquantity':Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facility)*runs))});
     }
     $.post('/blueprint/api/shoppingList/addItems.php',{'nonce':nonce,'listid':$('#shoppingListSelect').val(),'identifier':blueprintData.blueprintDetails.productTypeName,'itemJson':JSON.stringify(mats)},function(data) {
         if (data.status != 'success') {
@@ -537,7 +546,5 @@ var facilitytelookup={'1':1,'2':0.75,'3':0.75,'4':0.65};
 //var rfacilityme={'1':1,'2':0.7,'3':0.65,'4':Infinity};
 //var rfacilityte={'1':1,'2':0.7,'3':0.65,'4':Infinity};
 var researchMultiplier=[1,29/21,23/7,39/5,278/15,928/21,2200/21,5251/21,4163/7,29660/21];
-var teamMe=0;
-var teamTe=0;
 var salary=0;
 var inventionCost=0;

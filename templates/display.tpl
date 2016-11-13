@@ -66,27 +66,27 @@ $(document).ready(function() {
                 </select>
                 <label for="SecStatus">Sec Status</label>
                 <select name="SecStatus" id="SecStatus" onchange='saveFacility();'>
-                    <option value="0.6">High Sec</option>
-                    <option value="0.9">Low Sec</option>
-                    <option value="1">Null Sec/WH</option>
+                    <option value="1">High Sec</option>
+                    <option value="1.9">Low Sec</option>
+                    <option value="2.1">Null Sec/WH</option>
                 </select>
                 <label for="FacilitySize">Structure Size</label>
                 <select name="FacilitySize" id="FacilitySize" onchange='saveFacility();'>
-                    <option value="0.95">Medium</option>
-                    <option value="0.90">Large</option>
-                    <option value="0.85">X-Large</option>
+                    <option value="1">Medium</option>
+                    <option value="2">Large</option>
+                    <option value="3">X-Large</option>
                 </select>
                 <label for="MERig">Material Rig type</label>
                 <select name="MERig" id="MERig" onchange='saveFacility();'>
                     <option value="0">No Rig</option>
-                    <option value="4">T1 Rig</option>
-                    <option value="4.8">T2 Rig</option>
+                    <option value="2">T1 Rig</option>
+                    <option value="2.4">T2 Rig</option>
                 </select>
                 <label for="TERig">Time type</label>
                 <select name="TERig" id="TERig" onchange='saveFacility();'>
                     <option value="0">No Rig</option>
-                    <option value="40">T1 Rig</option>
-                    <option value="48">T2 Rig</option>
+                    <option value="20">T1 Rig</option>
+                    <option value="24">T2 Rig</option>
                 </select>
                     
 <br>
