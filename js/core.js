@@ -308,8 +308,8 @@ function runNumbers()
                 matme=blueprintData.activityMaterials[1][materialid].me;
                 matte=blueprintData.activityMaterials[1][materialid].te;
                 materialin=blueprintData.activityMaterials[1][materialid].materialdata[matmatid];
-                matreducedquantity=materialin.quantity*(1-(matme/100))*facilityme;
-                matjobquantity=Math.max(jobquantity,Math.ceil((materialin.quantity*(1-(matme/100))*facilityme)*jobquantity));
+                matreducedquantity=materialin.quantity*(1-(matme/100))*mfacilityme[materialid];
+                matjobquantity=Math.max(jobquantity,Math.ceil((materialin.quantity*(1-(matme/100))*mfacilityme[materialid])*jobquantity));
                 mat_materials.row.add([
                     name,
                     materialin.name,
@@ -338,7 +338,7 @@ function runNumbers()
                 'N/A',
                 $.number(matTotalPrice,2)
             ]);
-            thistime=blueprintData.activityMaterials[1][materialid].materialtime*jobquantity*(1-(matte/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte;
+            thistime=blueprintData.activityMaterials[1][materialid].materialtime*jobquantity*(1-(matte/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*mfacilityte[materialid];
             thistime=thistime/blueprintData.activityMaterials[1][materialid].materialquantity;
             additionalTime=additionalTime+thistime;
         } else {
