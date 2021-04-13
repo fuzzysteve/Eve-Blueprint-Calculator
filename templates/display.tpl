@@ -57,18 +57,16 @@ $(document).ready(function() {
             <div class="panel-body">
                 <label for="facility">Facility</label>
                 <select name="facility" id="facility" onchange='saveFacility();'>
-                    <option value="1">Station</option>
-                    <option value="2">Assembly Array</option>
-                    <option value="3">Thukker Component Array</option>
-                    <option value="4">Rapid Assembly Array</option>
-                    <option value="5">Engineering Complex</option>
+                    <option value="1">Station/Assembly array</option>
+                    <option value="5" selected>Engineering Complex</option>
                     <option value="6">Other Structure</option>
                 </select>
                 <label for="SecStatus">Sec Status</label>
                 <select name="SecStatus" id="SecStatus" onchange='saveFacility();'>
                     <option value="1">High Sec</option>
                     <option value="1.9">Low Sec</option>
-                    <option value="2.1">Null Sec/WH</option>
+                    <option value="2.1">Null Sec</option>
+                    <option value="-1">Wormhole</option>
                 </select>
                 <label for="FacilitySize">Structure Size</label>
                 <select name="FacilitySize" id="FacilitySize" onchange='saveFacility();'>
@@ -92,6 +90,7 @@ $(document).ready(function() {
 <br>
                 <label for="taxRate">Facility Tax Rate</label><input type=text value=0 name="taxRate" id="taxRate">
                 <label for="systemName">SystemName</label><input type=text value="Jita" name="system" id="systemName">
+                <label for="indexEntry" style="display:none">Industrial Index</label><input type=text value="0.01" name="indexEntry" id="indexEntry" style="display:none">
                 <img src="/blueprint/css/factory.png" class="pull-right" id="facilities" width=40 height=40>
             </div>
         </div>
@@ -395,7 +394,7 @@ $(document).ready(function() {
 
 
 
-<div id="prices" style="position:absolute;<? echo $pricepos;?>" class="panel panel-info">
+<div id="prices" style="position:absolute;<?php echo $pricepos;?>" class="panel panel-info">
     <div id="priceheader" class="panel-heading"><span style="float:right" class="glyphicon glyphicon-chevron-down" data-toggle="collapse" data-target="#pricedetail"></span>Prices</div>
         <div id="pricedetail" class="panel-body collapse">
                 <div>
@@ -406,7 +405,15 @@ $(document).ready(function() {
                 <option value='{$regionid}' {if $regionid==10000002}selected{/if}>{$regionname}</option>
 {/foreach}
                 </select>
+                
 
+               </div>
+               <div>
+                   <select id="typeOverride">
+                   <option value="0">Select Type to override</select>
+                   </select>
+                   <input id="priceOverride" type=number>
+                   <button id="newprices" onclick="overridePrices()">Override</button>
                </div>
                       <div id="pricetablediv">
                       <table border=1 id="priceTable" class="table table-striped table-bordered table-condensed">

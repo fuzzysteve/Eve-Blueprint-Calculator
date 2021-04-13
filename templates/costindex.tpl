@@ -53,7 +53,10 @@
         <th>Copying</th>
         <th>Reverse Engineering</th>
         <th>Invention</th>
+        <th>Reactions</th>
         <th>Security</th>
+        <th title="Affects the impact of installing jobs on the cost index">Manuf Multi</th>
+        <th Title="Affects the impact of installing jobs on the cost index">Research Multi</th>
         <th>Jumps</th>
     </tr>
 </thead>

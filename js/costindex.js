@@ -8,10 +8,10 @@ $(document).ready(function() {
             "bDeferRender": false,
             "sDom": 'C<"clear">lfrtip',
             "columnDefs": [{
-                "targets": [ 1,2,3,4,5,6 ],
+                "targets": [ 1,2,3,4,5,6,7 ],
                 className: "textright"
                 },
-                {"targets": [7],
+                {"targets": [8],
                 className: "textright security"
                 }
                 ],
@@ -34,7 +34,7 @@ function populateIndexes(indexJson) {
     currentindex=$('#region').val();
     cit=$("#costIndex").DataTable();
     cit.rows().remove();
-    for (systemidx in indexJson) {
+    for (var systemidx in indexJson) {
         system=indexJson[systemidx];
         cit.row.add([
         system.solarSystemName,
@@ -44,7 +44,10 @@ function populateIndexes(indexJson) {
         $.number(system.costIndexes[5]*100,2)+'%',
         $.number(system.costIndexes[7]*100,2)+'%',
         $.number(system.costIndexes[8]*100,2)+'%',
+        $.number(system.costIndexes[11]*100,2)+'%',
         system.security.toFixed(2),
+        system.manuf.toFixed(2),
+        system.resea.toFixed(2),
         system.length
         ]);
     }
@@ -69,10 +72,10 @@ function loadRegionIndexes()
 {
     addparam='';
     if ($("#factory").is(':checked')) {
-        addparam='&factory=1'
+        addparam='&factory=1';
     }
     if ($("#lab").is(':checked')) {
-        addparam=addparam+'&lab=1'
+        addparam=addparam+'&lab=1';
     }
     if (currentindex!=$('#region').val()) {
         queryurl="https://www.fuzzwork.co.uk/blueprint/api/regionIndexes.php?region="+$('#region').val()+addparam;
@@ -84,10 +87,10 @@ function loadRangeIndexes()
 {
     addparam='';
     if ($("#factory").is(':checked')) {
-        addparam='&factory=1'
+        addparam='&factory=1';
     }
     if ($("#lab").is(':checked')){
-        addparam=addparam+'&lab=1'
+        addparam=addparam+'&lab=1';
     }
     queryurl="https://www.fuzzwork.co.uk/blueprint/api/regionIndexes.php?system="+$('#systemname').val()+"&jumps="+$('#jumps').val()+addparam;
     $.getJSON(queryurl,function(data){populateIndexes(data);});

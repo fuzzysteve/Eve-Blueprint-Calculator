@@ -9,3 +9,4 @@ td.lowsec {background-color:orange !important}
 td.highsec {background-color:lightgreen !important}
 td.nullsec{background-color:crimson !important}
 tr.group, tr.group:hover {  background-color: #ddd !important;  }
+.makeme { box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);}

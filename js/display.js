@@ -238,6 +238,13 @@ $("#mainbody").hide();
         });
     });
 
+    $(function() {
+        $("#indexEntry").spinner({
+            min:0.01,
+            step:0.01,
+            stop: function(event,ui) {updatewhindex(ui.value);},
+        });
+    });
 
     $(function() {
         $("#systemName").autocomplete({

@@ -26,9 +26,10 @@ if (isset($_REQUEST['region'])) {
     $region=$_REQUEST['region'];
     $param=$region;
     $sql='SELECT regionID id FROM mapRegions WHERE regionid=?';
-    $sql2="SELECT ci.solarSystemID,solarSystemName,activityID,costIndex,mss.security,0 length
+    $sql2="SELECT ci.solarSystemID,solarSystemName,activityID,costIndex,mss.security,ManufMultiplier,ResearchMultiplier,0 length
     FROM evesupport.costIndex ci 
     JOIN mapSolarSystems mss on (ci.solarSystemID=mss.solarSystemID) 
+    join evesupport.systemmultiplier on mss.solarSystemID=systemmultiplier.solarSystemID
     $servicesql
     WHERE regionID=?
     $servicewhere
@@ -39,10 +40,11 @@ if (isset($_REQUEST['region'])) {
     $jumps=$_REQUEST['jumps'];
     $sql="SELECT solarSystemID id from mapSolarSystems where solarsystemname=?";
     $sql2="
-SELECT ci.solarSystemID,solarSystemName,activityID,costIndex,mss.security,length 
+SELECT ci.solarSystemID,solarSystemName,activityID,costIndex,mss.security,ManufMultiplier,ResearchMultiplier,pathLength length
 FROM evesupport.costIndex ci 
 JOIN mapSolarSystems mss on (ci.solarSystemID=mss.solarSystemID) 
-JOIN evesupport.routefullsmall on ((mss.solarSystemID=end and start=:system) and length<=:length)
+join evesupport.systemmultiplier on mss.solarSystemID=systemmultiplier.solarSystemID
+JOIN evesupport.mapRoutes on ((mss.solarSystemID=toSolarSystemID and fromSolarSystemID=:system) and pathLength<=:length and highsecOnly=0)
 $servicesql
 where 1=1
 $servicewhere
@@ -70,9 +72,9 @@ $stmt = $dbh->prepare($sql2);
 
 if (isset($jumps)) {
     if ($jumps<16) {
-        $params=array(':system'=>$id,':length'=>$jumps);
+        $params=array(':system'=>$id,':length'=>$jumps+1);
     } else {
-        $params=array(':system'=>$id,':length'=>10);
+        $params=array(':system'=>$id,':length'=>11);
     }
 } else {
     $params=array($id);
@@ -89,7 +91,9 @@ while ($row = $stmt->fetchObject()) {
     $activity[(int)$row->solarSystemID][(int)$row->activityID]=$row->costIndex;
     $security[(int)$row->solarSystemID]=$row->security;
     $solarsystems[(int)$row->solarSystemID]=$row->solarSystemName;
-    $length[(int)$row->solarSystemID]=(int)$row->length;
+    $manuf[(int)$row->solarSystemID]=$row->ManufMultiplier;
+    $resea[(int)$row->solarSystemID]=$row->ResearchMultiplier;
+    $length[(int)$row->solarSystemID]=(int)$row->length-1;
 }
 $output=array();
 
@@ -98,7 +102,10 @@ foreach ($solarsystems as $id => $name) {
         'solarSystemID'=>$id,
         'costIndexes'=>$activity[$id],
         'security'=>$security[$id],
-        'length'=>$length[$id]);
+        'length'=>$length[$id],
+        'manuf'=>$manuf[$id],
+        'resea'=>$resea[$id]
+    );
 }
 
 

@@ -3,16 +3,22 @@ function populateTables(blueprintJson)
     blueprintData=blueprintJson;
     $('#Material-blueprint-details').empty();
     materials=$('#materialsTable').DataTable();
-    materials.rows().remove(); 
-    $("#facilities").attr('title',blueprintData.blueprintDetails.facilities.join("\n"));
-    for (var materialid in blueprintData.activityMaterials[1]) {
-        blueprintData.activityMaterials[1][materialid].make=0;
-        blueprintData.activityMaterials[1][materialid].me=0;
-        blueprintData.activityMaterials[1][materialid].te=0;
-        material=blueprintData.activityMaterials[1][materialid];
+    materials.rows().remove();
+    if (facilities in blueprintData.blueprintDetails) {
+        $("#facilities").attr('title',blueprintData.blueprintDetails.facilities.join("\n"));
+    }
+    activityid=1
+    if (!(activityid in  blueprintData.activityMaterials) && "11" in blueprintData.activityMaterials ) {
+        activityid=11
+    }
+    for (var materialid in blueprintData.activityMaterials[activityid]) {
+        blueprintData.activityMaterials[activityid][materialid].make=0;
+        blueprintData.activityMaterials[activityid][materialid].me=0;
+        blueprintData.activityMaterials[activityid][materialid].te=0;
+        material=blueprintData.activityMaterials[activityid][materialid];
         var newrow='';
         if (material.maketype>0) {
-            newrow=materials.row.add([material.typeid,'<a href="blueprint/?typeid='+material.maketype+'">'+material.name+"</a>",material.quantity,0,0,0,0,0]).draw().node();
+            newrow=materials.row.add([material.typeid,'<a href="/blueprint/?typeid='+material.maketype+'">'+material.name+"</a>",material.quantity,0,0,0,0,0]).draw().node();
         } else {
             newrow=materials.row.add([material.typeid,material.name,material.quantity,0,0,0,0,0]).draw().node();
         }
@@ -106,6 +112,8 @@ function getMatMaterials2(materialid,blueprintdetails) {
     blueprintData.activityMaterials[1][matid].materialtime=blueprintdetails.blueprintDetails.times[1];
     blueprintData.activityMaterials[1][matid].materialquantity=blueprintdetails.blueprintDetails.productQuantity;
     blueprintData.activityMaterials[1][matid].make=1;
+    blueprintData.activityMaterials[1][matid].me=10;
+    blueprintData.activityMaterials[1][matid].te=20;
 
     p = document.createElement('p');
     label = document.createElement('label');
@@ -129,13 +137,13 @@ function getMatMaterials2(materialid,blueprintdetails) {
     input.setAttribute("value", 20);
     p.appendChild(input);
     $('#Material-blueprint-details').append(p);
-    $('#Material-blueprint-details').append('<label for="facility-'+matid+'">Facility</label><select name="facility-'+matid+'" id="facility-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="1">Station</option><option value="2">Assembly Array</option><option value="3">Thukker Component Array</option><option value="4">Rapid Assembly Array</option><option value="5">Engineering Complex</option><option value="6">Other Structure</option></select><label for="SecStatus-'+matid+'">Sec Status</label><select name="SecStatus-'+matid+'" id="SecStatus-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="1">High Sec</option><option value="1.9">Low Sec</option><option value="2.1">Null Sec/WH</option></select><label for="FacilitySize-'+matid+'">Structure Size</label><select name="FacilitySize-'+matid+'" id="FacilitySize-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="1">Medium</option><option value="2">Large</option><option value="3">X-Large</option></select><label for="MERig-'+matid+'">Material Rig type</label><select name="MERig-'+matid+'" id="MERig-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="0">No Rig</option><option value="2">T1 Rig</option><option value="2.4">T2 Rig</option></select><label for="TERig-'+matid+'">Time type</label><select name="TERig-'+matid+'" id="TERig-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="0">No Rig</option><option value="20">T1 Rig</option><option value="24">T2 Rig</option></select>');
+    $('#Material-blueprint-details').append('<label for="facility-'+matid+'">Facility</label><select name="facility-'+matid+'" id="facility-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="1">Station/Assembly Array</option><option value="5" selected>Engineering Complex</option><option value="6">Other Structure</option></select><label for="SecStatus-'+matid+'">Sec Status</label><select name="SecStatus-'+matid+'" id="SecStatus-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="1">High Sec</option><option value="1.9">Low Sec</option><option value="2.1">Null Sec/WH</option></select><label for="FacilitySize-'+matid+'">Structure Size</label><select name="FacilitySize-'+matid+'" id="FacilitySize-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="1">Medium</option><option value="2">Large</option><option value="3">X-Large</option></select><label for="MERig-'+matid+'">Material Rig type</label><select name="MERig-'+matid+'" id="MERig-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="0">No Rig</option><option value="2">T1 Rig</option><option value="2.4">T2 Rig</option></select><label for="TERig-'+matid+'">Time type</label><select name="TERig-'+matid+'" id="TERig-'+matid+'" onchange=\'saveFacility('+matid+');\'><option value="0">No Rig</option><option value="20">T1 Rig</option><option value="24">T2 Rig</option></select>');
     $("#spin-me-"+matid).data("matid",matid);
     $("#spin-te-"+matid).data("matid",matid);
     $("#spin-me-"+matid).spinner({min:0,max:10,spin:function(event,ui){blueprintData.activityMaterials[1][$(this).data("matid")].me=parseInt(ui.value);runNumbers();},change:function(event,ui){blueprintData.activityMaterials[1][$(this).data("matid")].me=parseInt($(this).val());runNumbers();}});
     $("#spin-te-"+matid).spinner({min:0,max:20,spin:function(event,ui){blueprintData.activityMaterials[1][$(this).data("matid")].te=parseInt(ui.value);runNumbers();},change:function(event,ui){blueprintData.activityMaterials[1][$(this).data("matid")].te=parseInt($(this).val());runNumbers();}});
-    mfacilityme[matid]=1;
-    mfacilityte[matid]=1;
+    mfacilityme[matid]=0.99;
+    mfacilityte[matid]=0.85;
     generateMaterialList();
     loadPrices();
 }
@@ -172,13 +180,25 @@ function generateMaterialList()
 
 }
 
+
+function overridePrices() {
+  if (parseInt($("#typeOverride").val())!=0){
+    priceData[parseInt($("#typeOverride").val())].sell=parseFloat($("#priceOverride").val())
+  }
+  runNumbers();
+
+
+}
+
 function populatePrices(pricejson) {
     priceData=pricejson;
     prices=$('#priceTable').DataTable();
+    $("#typeOverride").empty();
+        $("#typeOverride").append("<option value='0'>Select Type to Override price</option>");
     prices.rows().remove();
-
     for (var materialid in materialList) {
         typeid=materialList[materialid];
+        $("#typeOverride").append("<option value='"+typeid+"'>"+materialNames[typeid]+"</option>");
         prices.row.add([materialNames[typeid],$.number(priceData[typeid].sell,2),$.number(priceData[typeid].buy,2),$.number(priceData[typeid].adjusted,2)]);
     }
     prices.draw();
@@ -207,9 +227,17 @@ function loadIndexes()
     }
 }
 
+String.prototype.format = function () {
+  var i = 0, args = arguments;
+  return this.replace(/{}/g, function () {
+    return typeof args[i] != 'undefined' ? args[i++] : '';
+  });
+};
+
+
 function loadPrices()
 {
-    queryurl="https://www.fuzzwork.co.uk/blueprint/api/prices.php?regionid="+regionid+"&typeids="+JSON.stringify(materialList);
+    queryurl=priceurlstring.format(regionid,JSON.stringify(materialList));
      $.getJSON(queryurl,function(data){populatePrices(data);});
 }
 
@@ -218,6 +246,40 @@ function loadBlueprint(blueprint)
     $("#mainbody").show();
     queryurl="https://www.fuzzwork.co.uk/blueprint/api/blueprint.php?typeid="+blueprint;
     $.getJSON(queryurl,function(data){populateTables(data);});
+}
+
+
+function setIndexes(indexValue)
+{
+    cit=$("#costIndexTable").DataTable();
+    cit.rows().remove();
+    cit.row.add(["All Indexes",$.number(parseFloat(indexValue),5)]);
+    cit.draw();
+    indexNumber=parseFloat(indexValue);
+    indexData.costIndexes={"1":indexNumber,"2":indexNumber,"3":indexNumber,"4":indexNumber,"5":indexNumber,"6":indexNumber,"7":indexNumber,"8":indexNumber,"11":indexNumber};
+    currentindex="wormhole";
+    runNumbers();
+}
+
+function updatewhindex()
+{
+    setIndexes($("#indexEntry").val());
+}
+
+
+function showIndexEntry(showit)
+{
+    if (showit){
+        $('label[for=systemName], input#systemName').hide();
+        $('label[for=indexEntry], input#indexEntry').show();
+        $("#indexEntry").change(function() {updatewhindex();});
+        setIndexes("0.01");
+    } else {
+        $('label[for=indexEntry], input#indexEntry').hide();
+        $('label[for=systemName], input#systemName').show();
+        loadIndexes();
+    }
+
 }
 
 
@@ -232,6 +294,8 @@ function saveFacility(materialid)
     }
 
     var facility=parseInt($('#facility'+fsuffix).val());
+
+
 
     if (facility in facilitymelookup)
     {
@@ -258,6 +322,14 @@ function saveFacility(materialid)
         }
 
         secstatus=parseFloat($('#SecStatus'+fsuffix).val());
+        
+        if (secstatus==-1) {
+            secstatus=2.1;
+            showIndexEntry(true);
+        } else if ( typeof materialid == 'undefined') {
+            showIndexEntry(false);
+        }
+
         lfacilityme=((100-(parseFloat($('#MERig'+fsuffix).val())*secstatus))/100)*facilitymemod;
         lfacilityte=((100-(parseFloat($('#TERig'+fsuffix).val())*secstatus))/100)*tebonus;
     }
@@ -291,23 +363,27 @@ function runNumbers()
     taxmultiplier=(taxRate/100)+1;
     additionalTime=0;
     var allMaterials= {};
-    for (var materialid in blueprintData.activityMaterials[1]) {
-        material=blueprintData.activityMaterials[1][materialid];
+    activityid=1
+    if (!(activityid in  blueprintData.activityMaterials) && "11" in blueprintData.activityMaterials ) {
+        activityid=11
+    }
+    for (var materialid in blueprintData.activityMaterials[activityid]) {
+        material=blueprintData.activityMaterials[activityid][materialid];
         reducedquantity=material.quantity*(1-(me/100))*facilityme;
         jobquantity=Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme)*runs));
         jobquantityWT=Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme)*runs));
         if (material.maketype>0) {
-            name='<span onclick="togglebuild('+material.typeid+')" title="Toggle making yourself">M</span> <a href="/blueprint/?typeid='+material.maketype+'" target="_blank">'+material.name+"</a>";
+            name='<button onclick="togglebuild('+material.typeid+')" title="Toggle making yourself" class="makeme">M</button> <a href="/blueprint/?typeid='+material.maketype+'" target="_blank">'+material.name+"</a>";
         } else {
             name=material.name;
         }
         if (material.make==1) {
             matTotalPrice=0;
             matRunCost=0;
-            for (var matmatid in blueprintData.activityMaterials[1][materialid].materialdata) {
-                matme=blueprintData.activityMaterials[1][materialid].me;
-                matte=blueprintData.activityMaterials[1][materialid].te;
-                materialin=blueprintData.activityMaterials[1][materialid].materialdata[matmatid];
+            for (var matmatid in blueprintData.activityMaterials[activityid][materialid].materialdata) {
+                matme=blueprintData.activityMaterials[activityid][materialid].me;
+                matte=blueprintData.activityMaterials[activityid][materialid].te;
+                materialin=blueprintData.activityMaterials[activityid][materialid].materialdata[matmatid];
                 matreducedquantity=materialin.quantity*(1-(matme/100))*mfacilityme[materialid];
                 matjobquantity=Math.max(jobquantity,Math.ceil((materialin.quantity*(1-(matme/100))*mfacilityme[materialid])*jobquantity));
                 mat_materials.row.add([
@@ -338,8 +414,8 @@ function runNumbers()
                 'N/A',
                 $.number(matTotalPrice,2)
             ]);
-            thistime=blueprintData.activityMaterials[1][materialid].materialtime*jobquantity*(1-(matte/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*mfacilityte[materialid];
-            thistime=thistime/blueprintData.activityMaterials[1][materialid].materialquantity;
+            thistime=blueprintData.activityMaterials[activityid][materialid].materialtime*jobquantity*(1-(matte/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*mfacilityte[materialid];
+            thistime=thistime/blueprintData.activityMaterials[activityid][materialid].materialquantity;
             additionalTime=additionalTime+thistime;
         } else {
             materials.row($('#material-'+material.typeid)).data([
@@ -374,7 +450,7 @@ function runNumbers()
     $('#materialSaving').number(totalPriceWT-totalPrice,2);
     $('#jobCost').number(totalPrice,2);
     $('#adjustedCost').number(runCost,2);
-    $('#installCost').number((runCost*indexData.costIndexes["1"])*taxmultiplier*(1+(salary/100)),2);
+    $('#installCost').number((runCost*indexData.costIndexes[activityid])*taxmultiplier*(1+(salary/100)),2);
     profitNumber=(((priceData[blueprintData.blueprintDetails.productTypeID].sell*blueprintData.blueprintDetails.productQuantity*runs)-totalPrice)-(runCost*indexData.costIndexes["1"]*taxmultiplier*(1+(salary/100))))-inventionCost;
     if (blueprintData.blueprintDetails.techLevel==2 && ('8' in blueprintData.activityMaterials)) {
         dc1skill=parseInt($("#dc1skill").val());
@@ -383,8 +459,12 @@ function runNumbers()
     } else {
         dcmultiplier=1;
     }
+     if (activityid==1) {
+         buildTime=blueprintData.blueprintDetails.times[activityid]*(1-(te/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte*runs*dcmultiplier;
+     } else if (activityid==11) {
+         buildTime=blueprintData.blueprintDetails.times[activityid];
+     }
 
-    buildTime=blueprintData.blueprintDetails.times[1]*(1-(te/100))*(1-((industry*4)/100))*(1-((aindustry*3)/100))*facilityte*runs*dcmultiplier;
     buildTime=additionalTime+buildTime;
     $('#buildTime').text(String(buildTime).toHHMMSS());
     $('#profit').number(profitNumber,2);
@@ -524,7 +604,7 @@ function saveList() {
     mats=Array();
     for (var materialid in blueprintData.activityMaterials[1]) {
         material=blueprintData.activityMaterials[1][materialid];
-        mats.push({'typeid':material.typeid,'jobquantity':Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facility)*runs))});
+        mats.push({'typeid':material.typeid,'jobquantity':Math.max(runs,Math.ceil((material.quantity*(1-(me/100))*facilityme)*runs))});
     }
     $.post('/blueprint/api/shoppingList/addItems.php',{'nonce':nonce,'listid':$('#shoppingListSelect').val(),'identifier':blueprintData.blueprintDetails.productTypeName,'itemJson':JSON.stringify(mats)},function(data) {
         if (data.status != 'success') {
@@ -551,15 +631,15 @@ var indexData;
 var runCost;
 var currentindex=0;
 var runs=1;
-var facilityme=1;
+var facilityme=0.99;
 var rfacility=1;
-var facilityte=1;
+var facilityte=0.85;
 var mfacilityme=[];
 var mfacilityte=[];
 var regionid=10000002;
 var taxRate=0;
 var profitNumber=0;
-var activityNames={'1':'Manufacturing','3':'TE Research','4':'ME research','5':'Copying','7':'Reverse Engineering','8':'Invention'};
+var activityNames={'1':'Manufacturing','3':'TE Research','4':'ME research','5':'Copying','7':'Reverse Engineering','8':'Invention','11':'Reactions'};
 var facilitymelookup={'1':1,'2':0.98,'3':0.85,'4':1.05};
 //,5:0.97,6:0.955,7:0.95,8:0.964,9:0.94,10:0.976,11:0.964,12:0.96,13:0.9712,14:0.9568,15:0.952};
 var facilitytelookup={'1':1,'2':0.75,'3':0.75,'4':0.65};
@@ -568,3 +648,4 @@ var facilitytelookup={'1':1,'2':0.75,'3':0.75,'4':0.65};
 var researchMultiplier=[1,29/21,23/7,39/5,278/15,928/21,2200/21,5251/21,4163/7,29660/21];
 var salary=0;
 var inventionCost=0;
+priceurlstring="https://www.fuzzwork.co.uk/blueprint/api/prices.php?regionid={}&typeids={}";
