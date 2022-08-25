@@ -409,6 +409,7 @@ $(document).ready(function() {
 
                </div>
                <div>
+                   <a href="/blueprint/override.php">Manage Overrides</a><br>
                    <select id="typeOverride">
                    <option value="0">Select Type to override</select>
                    </select>

@@ -51,7 +51,6 @@
         <th>TE Research</th>
         <th>ME Research</th>
         <th>Copying</th>
-        <th>Reverse Engineering</th>
         <th>Invention</th>
         <th>Reactions</th>
         <th>Security</th>

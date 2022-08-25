@@ -42,7 +42,6 @@ function populateIndexes(indexJson) {
         $.number(system.costIndexes[3]*100,2)+'%',
         $.number(system.costIndexes[4]*100,2)+'%',
         $.number(system.costIndexes[5]*100,2)+'%',
-        $.number(system.costIndexes[7]*100,2)+'%',
         $.number(system.costIndexes[8]*100,2)+'%',
         $.number(system.costIndexes[11]*100,2)+'%',
         system.security.toFixed(2),

@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 $basedir="/home/web/fuzzwork/htdocs/blueprint";
 $baseurl="/blueprint";
 

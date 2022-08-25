@@ -184,6 +184,9 @@ function generateMaterialList()
 function overridePrices() {
   if (parseInt($("#typeOverride").val())!=0){
     priceData[parseInt($("#typeOverride").val())].sell=parseFloat($("#priceOverride").val())
+    if (typeof(Storage) !== "undefined") {
+        localStorage.setItem("priceOverride-"+parseInt($("#typeOverride").val()), parseFloat($("#priceOverride").val()));
+    }
   }
   runNumbers();
 
@@ -198,8 +201,13 @@ function populatePrices(pricejson) {
     prices.rows().remove();
     for (var materialid in materialList) {
         typeid=materialList[materialid];
+        override=""
+        if (typeof(localStorage.getItem("priceOverride-"+typeid)) == "string" ) {
+            override=" - O"
+            priceData[typeid].sell=localStorage.getItem("priceOverride-"+typeid);
+        }
         $("#typeOverride").append("<option value='"+typeid+"'>"+materialNames[typeid]+"</option>");
-        prices.row.add([materialNames[typeid],$.number(priceData[typeid].sell,2),$.number(priceData[typeid].buy,2),$.number(priceData[typeid].adjusted,2)]);
+        prices.row.add([materialNames[typeid],$.number(priceData[typeid].sell,2)+override,$.number(priceData[typeid].buy,2),$.number(priceData[typeid].adjusted,2)]);
     }
     prices.draw();
     loadIndexes();
@@ -397,7 +405,8 @@ function runNumbers()
                     $.number(priceData[materialin.typeid].sell*matjobquantity,2)
                 ]);
                 matTotalPrice=matTotalPrice+priceData[materialin.typeid].sell*matjobquantity/blueprintData.activityMaterials[1][materialid].materialquantity;
-                matRunCost=matRunCost+priceData[materialin.typeid].adjusted*materialin.quantity*runs*jobquantity;
+                //matRunCost=matRunCost+priceData[materialin.typeid].adjusted*materialin.quantity*runs*jobquantity;
+                matRunCost=matRunCost+priceData[materialin.typeid].adjusted*materialin.quantity*jobquantity;
                 allMaterials[materialin.typeid]=(typeof allMaterials[materialin.typeid] == "undefined")?matjobquantity:allMaterials[materialin.typeid]+matjobquantity;
             }
             totalPriceWT=totalPriceWT+matTotalPrice;

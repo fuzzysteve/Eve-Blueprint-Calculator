@@ -1,0 +1,4 @@
+<?php
+
+$session_nonce="a random string here!";
+$list_nonce="yet another random string!";

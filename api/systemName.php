@@ -7,7 +7,7 @@ if (strlen($name)<2) {
     exit;
 }
 $name=$name."%";
-$sql="SELECT solarSystemName FROM mapSolarSystems where solarSystemName like ? limit 5";
+$sql="SELECT solarSystemName FROM mapSolarSystems where solarSystemName like ? and security!=-0.99  limit 5";
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 $stmt=$dbh->prepare($sql);
