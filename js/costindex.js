@@ -8,10 +8,10 @@ $(document).ready(function() {
             "bDeferRender": false,
             "sDom": 'C<"clear">lfrtip',
             "columnDefs": [{
-                "targets": [ 1,2,3,4,5,6,7 ],
+                "targets": [ 1,2,3,4,5,6,8,9 ],
                 className: "textright"
                 },
-                {"targets": [8],
+                {"targets": [7],
                 className: "textright security"
                 }
                 ],
