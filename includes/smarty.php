@@ -2,7 +2,17 @@
 
 require_once $basedir."/vendor/autoload.php";
 
-$smarty = new SmartyBC();
+$smarty = new Smarty();
+
+
+$smarty->registerPlugin('function', 'include_php', function($params, $smarty) {
+    ob_start();
+    include($params['file']);
+    return ob_get_clean();
+});
+
+
+
 
 $smarty->setTemplateDir($basedir.'/templates');
 $smarty->setCompileDir($basedir.'/templates_c');

@@ -256,12 +256,12 @@ $("#mainbody").hide();
     });
 
     $(function() {
-        $("#taxRate").spinner({
+        $("#facilityTaxRate").spinner({
             min:0,
             max:100,
             step: 0.01,
-            spin: function(event,ui) {taxRate=ui.value;runNumbers();},
-            change: function(event,ui) {taxRate=$("#taxRate").val();runNumbers();}
+            spin: function(event,ui) {facilityTaxRate=ui.value;runNumbers();},
+            change: function(event,ui) {facilityTaxRate=parseFloat($("#facilityTaxRate").val());runNumbers();}
         });
     });
 

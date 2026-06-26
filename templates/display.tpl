@@ -88,7 +88,7 @@ $(document).ready(function() {
                 </select>
                     
 <br>
-                <label for="taxRate">Facility Tax Rate</label><input type=text value=0 name="taxRate" id="taxRate">
+                <label for="facilityTaxRate">Facility Tax Rate (%)</label><input type=text value=0.25 name="facilityTaxRate" id="facilityTaxRate">
                 <label for="systemName">SystemName</label><input type=text value="Jita" name="system" id="systemName">
                 <label for="indexEntry" style="display:none">Industrial Index</label><input type=text value="0.01" name="indexEntry" id="indexEntry" style="display:none">
                 <img src="/blueprint/css/factory.png" class="pull-right" id="facilities" width=40 height=40>
@@ -137,6 +137,8 @@ $(document).ready(function() {
                     <tr><th colspan=7>Item Unit Price</th><td id='unitPrice' class='text-right'></td></tr>
                     <tr><th colspan=7>Job Material Cost</th><td id='jobCost' class='text-right'></td></tr>
                     <tr><th colspan=7 title="The price that is then multiplied by the cost index, to work out the install cost">Job Base Price</th><td id='adjustedCost' class='text-right'></td></tr>
+                    <tr><th colspan=7>SCC Surcharge (4%)</th><td id='sccFee' class='text-right'></td></tr>
+                    <tr><th colspan=7>Facility Tax</th><td id='facilityTaxCost' class='text-right'></td></tr>
                     <tr><th colspan=7>Install Price</th><td id='installCost' class='text-right'></td></tr>
                     <tr><th colspan=7>Build Time</th><td id='buildTime' class='text-right'></td></tr>
                     <tr id="inventioncosttr"><th colspan=7>Invention Cost</th><td id='inventionCost' class='text-right'></td></tr>

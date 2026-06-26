@@ -368,7 +368,6 @@ function runNumbers()
     totalPrice=0;
     totalPriceWT=0;
     runCost=0;
-    taxmultiplier=(taxRate/100)+1;
     additionalTime=0;
     var allMaterials= {};
     activityid=1
@@ -459,8 +458,15 @@ function runNumbers()
     $('#materialSaving').number(totalPriceWT-totalPrice,2);
     $('#jobCost').number(totalPrice,2);
     $('#adjustedCost').number(runCost,2);
-    $('#installCost').number((runCost*indexData.costIndexes[activityid])*taxmultiplier*(1+(salary/100)),2);
-    profitNumber=(((priceData[blueprintData.blueprintDetails.productTypeID].sell*blueprintData.blueprintDetails.productQuantity*runs)-totalPrice)-(runCost*indexData.costIndexes["1"]*taxmultiplier*(1+(salary/100))))-inventionCost;
+    var sccFee = runCost * 0.04;
+    var facilityTax = runCost * (facilityTaxRate / 100);
+    var systemCost = runCost * indexData.costIndexes[activityid] * (1+(salary/100));
+    var totalInstallCost = systemCost + sccFee + facilityTax;
+    $('#sccFee').number(sccFee, 2);
+    $('#facilityTaxCost').number(facilityTax, 2);
+    $('#installCost').number(totalInstallCost, 2);
+    var installCostForProfit = runCost * indexData.costIndexes["1"] * (1+(salary/100)) + sccFee + facilityTax;
+    profitNumber=(((priceData[blueprintData.blueprintDetails.productTypeID].sell*blueprintData.blueprintDetails.productQuantity*runs)-totalPrice)-installCostForProfit)-inventionCost;
     if (blueprintData.blueprintDetails.techLevel==2 && ('8' in blueprintData.activityMaterials)) {
         dc1skill=parseInt($("#dc1skill").val());
         dc2skill=parseInt($("#dc2skill").val());
@@ -497,7 +503,7 @@ function inventionNumbers()
         if (decryptor>-1) {
             decryptormult=blueprintData.decryptors[decryptor].multiplier;
         }
-        taxmultiplier=(taxRate/100)+1;
+        taxmultiplier=(facilityTaxRate/100)+1;
         inventionChance=Math.min(((blueprintData.blueprintDetails.probability*100) * (1 + ((dc1skill+dc2skill)/30)+(encryptionskill/40)))*decryptormult,100);
         invention=$('#inventionCosts').DataTable();
         $("#inventionProbability").number(inventionChance,1);
@@ -533,7 +539,7 @@ function updatePrices()
 
 function runTimeNumbers()
 {
-    taxmultiplier=(taxRate/100)+1;
+    taxmultiplier=(facilityTaxRate/100)+1;
     meRes=$('#meresearch').val().split('-');
     teRes=$('#teresearch').val().split('-');
     meRes[0]=parseInt(meRes[0]);
@@ -646,7 +652,7 @@ var facilityte=0.85;
 var mfacilityme=[];
 var mfacilityte=[];
 var regionid=10000002;
-var taxRate=0;
+var facilityTaxRate=0.25;
 var profitNumber=0;
 var activityNames={'1':'Manufacturing','3':'TE Research','4':'ME research','5':'Copying','7':'Reverse Engineering','8':'Invention','11':'Reactions'};
 var facilitymelookup={'1':1,'2':0.98,'3':0.85,'4':1.05};
