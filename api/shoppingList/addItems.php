@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 include('../../includes/db.inc.php');
 include('../../includes/nonce.inc.php');
 

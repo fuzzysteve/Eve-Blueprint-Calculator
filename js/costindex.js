@@ -45,8 +45,6 @@ function populateIndexes(indexJson) {
         $.number(system.costIndexes[8]*100,2)+'%',
         $.number(system.costIndexes[11]*100,2)+'%',
         system.security.toFixed(2),
-        system.manuf.toFixed(2),
-        system.resea.toFixed(2),
         system.length
         ]);
     }

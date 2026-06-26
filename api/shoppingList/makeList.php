@@ -1,12 +1,23 @@
 <?php
-
+session_start();
 include('../../includes/db.inc.php');
 include('../../includes/nonce.inc.php');
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 if (!isset($_SESSION['auth_id']) or !isset($_POST['nonce']) or !isset($_POST['identifier'])) {
-    echo '{"error":"Bad Values"}';
+
+
+    if (!isset($_SESSION['auth_id'])) {
+    echo '{"error":"no authid"}';
+    }
+    if (!isset($_POST['nonce'])) {
+    echo '{"error":"no nonce"}';
+    }
+    if (!isset($_POST['identifier'])) {
+    echo '{"error":"no identifier"}';
+    }
+    echo '{"error":"bad values"}';
     exit;
 }
 
@@ -29,7 +40,6 @@ insert into industrySupport.shoppingList (owner,identifier) values (:owner,:iden
 EOS;
 
 $stmt=$dbh->prepare($sql);
-
 try {
     $stmt->execute(array(":owner"=>$_SESSION['auth_id'], ":identifier"=>$identifier));
 } catch (PDOException  $e) {
