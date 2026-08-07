@@ -4,4 +4,4 @@ vendor/
 templates_c/
 config/
 cache/
-
+includes/nonce.inc.php
