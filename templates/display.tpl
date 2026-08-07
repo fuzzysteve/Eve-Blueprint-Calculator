@@ -136,7 +136,7 @@ $(document).ready(function() {
                     <tfoot>
                     <tr><th colspan=7>Item Unit Price</th><td id='unitPrice' class='text-right'></td></tr>
                     <tr><th colspan=7>Job Material Cost</th><td id='jobCost' class='text-right'></td></tr>
-                    <tr><th colspan=7 title="The price that is then multiplied by the cost index, to work out the install cost">Job Base Price</th><td id='adjustedCost' class='text-right'></td></tr>
+                    <tr><th colspan=7 title="The price that is then multiplied by the cost index, to work out the install cost">EIV</th><td id='adjustedCost' class='text-right'></td></tr>
                     <tr><th colspan=7>SCC Surcharge (4%)</th><td id='sccFee' class='text-right'></td></tr>
                     <tr><th colspan=7>Facility Tax</th><td id='facilityTaxCost' class='text-right'></td></tr>
                     <tr><th colspan=7>Install Price</th><td id='installCost' class='text-right'></td></tr>
