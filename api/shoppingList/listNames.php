@@ -9,7 +9,7 @@ if (!isset($_SESSION['auth_id']) or !isset($_GET['listnonce'])) {
 }
 
 
-if ($_GET['listnonce'] != md5($list_nonce.$_SESSION['auth_id'].$_SESSION['auth_state'])) {
+if (!hash_equals(md5($list_nonce.$_SESSION['auth_id'].$_SESSION['auth_state']), $_GET['listnonce'])) {
     exit;
 }
 

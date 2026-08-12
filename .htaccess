@@ -1,1 +1,6 @@
+RewriteEngine On
+
+RewriteRule ^(vendor|cache|templates_c)/ - [F,L]
+RewriteRule (^|/)\.git(/|$) - [F,L]
+
 RewriteRule .* - [L]

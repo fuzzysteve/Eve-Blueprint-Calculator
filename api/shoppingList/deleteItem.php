@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 include('../../includes/db.inc.php');
 include('../../includes/nonce.inc.php');
 
@@ -14,7 +14,7 @@ if (!isset($_SESSION['auth_id'])
 }
 
 
-if ($_POST['nonce'] != md5($session_nonce.$_SESSION['auth_id'].$_SESSION['auth_state'])) {
+if (!hash_equals(md5($session_nonce.$_SESSION['auth_id'].$_SESSION['auth_state']), $_POST['nonce'])) {
     echo '{"error":"Bad Nonce"}';
     exit;
 }

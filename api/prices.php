@@ -10,6 +10,12 @@ if (isset($_GET['regionid']) and is_numeric($_GET['regionid'])) {
 
 if (isset($_GET['typeids'])) {
     $typeids=json_decode($_GET['typeids']);
+    if (!is_array($typeids)) {
+        $typeids=array();
+    }
+    $typeids=array_values(array_filter($typeids, 'is_numeric'));
+} else {
+    $typeids=array();
 }
 
 

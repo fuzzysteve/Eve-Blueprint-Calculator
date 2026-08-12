@@ -49,7 +49,6 @@ $servicesql
 where 1=1
 $servicewhere
             ";
-            error_log($sql2);
 } else {
     header("HTTP/1.1 500 Internal Server Error");
     exit;
@@ -62,7 +61,6 @@ $stmt->execute(array($param));
 
 if ($row = $stmt->fetchObject()) {
     $id=(int)$row->id;
-    error_log($id);
 } else {
     header("HTTP/1.1 500 Internal Server Error");
     exit;

@@ -5,3 +5,4 @@ templates_c/
 config/
 cache/
 includes/nonce.inc.php
+includes/db.inc.php

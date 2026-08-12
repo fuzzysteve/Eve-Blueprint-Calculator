@@ -1,6 +1,6 @@
 <?php
 
-require_once('db.inc.php');
+require_once('../includes/db.inc.php');
 
 if (array_key_exists('typename', $_REQUEST)) {
     $bpid=$_REQUEST['typename'];
@@ -41,14 +41,14 @@ if (is_numeric($itemid)) {
 <eveapi version=\"2\">
 <result>
 <rowset name=\"typeids\" key=\"typeID\" columns=\"typeName,TypeID\">
-<row typeName=\"".$itemname."\" typeID=\"".$itemid."\" />
+<row typeName=\"".htmlspecialchars($itemname, ENT_XML1 | ENT_QUOTES, 'UTF-8')."\" typeID=\"".$itemid."\" />
 </rowset>
 </result>
 </eveapi>";
     }
 
     if ($format == 'json') {
-        echo "{\"typeID\": ".$itemid.",\"typeName\": \"".addslashes($itemname)."\"}";
+        echo json_encode(array("typeID"=>(int)$itemid, "typeName"=>$itemname));
     }
 
 
