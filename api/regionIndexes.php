@@ -40,7 +40,7 @@ if (isset($_REQUEST['region'])) {
     $jumps=$_REQUEST['jumps'];
     $sql="SELECT solarSystemID id from mapSolarSystems where solarsystemname=?";
     $sql2="
-SELECT ci.solarSystemID,solarSystemName,activityID,costIndex,mss.security,pathLength length
+SELECT ci.solarSystemID,solarSystemName,activityID,costIndex,mss.security,ManufMultiplier,ResearchMultiplier,pathLength length
 FROM evesupport.costIndex ci 
 JOIN mapSolarSystems mss on (ci.solarSystemID=mss.solarSystemID) 
 join evesupport.systemmultiplier on mss.solarSystemID=systemmultiplier.solarSystemID

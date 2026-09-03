@@ -4,5 +4,7 @@
         "predis/predis": "*",
         "fuzzysteve/eve-blueprint-library": "dev-master",
         "smarty/smarty": "^4.0"
-   }
+   },
+   "minimum-stability": "dev",
+   "prefer-stable": true
 }
