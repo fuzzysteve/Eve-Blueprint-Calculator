@@ -2,7 +2,7 @@
 {block name=title}Blueprint Display{/block}
 {block name=extrajavascript}
 <script src="{$baseurl}/js/core.js"></script>
-<script src="{$baseurl}/js/display.js"></script>
+<script src="{$baseurl}/js/display.js?v=3"></script>
 <script src="{$baseurl}/js/items.js"></script>
 {literal}
 <script type="text/javascript">
@@ -396,7 +396,7 @@ $(document).ready(function() {
 
 
 
-<div id="prices" style="position:absolute;<?php echo $pricepos;?>" class="panel panel-info">
+<div id="prices" style="position:absolute; top:80px; right:16px; z-index:20; max-width:calc(100% - 32px);" class="panel panel-info">
     <div id="priceheader" class="panel-heading"><span style="float:right" class="glyphicon glyphicon-chevron-down" data-toggle="collapse" data-target="#pricedetail"></span>Prices</div>
         <div id="pricedetail" class="panel-body collapse">
                 <div>
@@ -430,14 +430,12 @@ $(document).ready(function() {
             </div>
     </div>
 </div>
-</div>
     <div id="blueprintSelection" class="panel panel-default">
         <div class="panel-heading"><h1 class="panel-title">Blueprint Selection</h1></div>
         <div class="panel-body">
             <input id="itemname">
         </div>
     </div>
-</div>
 <script type="text/javascript">
 {nocache}
 {if $auth_characterid>0}

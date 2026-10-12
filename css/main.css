@@ -1,12 +1,19 @@
-body { background-color:#D9D9D9}
+/* Layout: applies under every theme */
 .icon32 {vertical-align:middle;}
 .icon64 {vertical-align:middle;}
-.perfect {background-color:green;}
 #priceheader {margin-top:0;margin-bottom:0;text-align:center; width:100%;font-size:1.875em;cursor:move}
 td.textright {text-align: right;}
 td.textcenter {text-align: center;}
-td.lowsec {background-color:orange !important}
-td.highsec {background-color:lightgreen !important}
-td.nullsec{background-color:crimson !important}
-tr.group, tr.group:hover {  background-color: #ddd !important;  }
-.makeme { box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);}
+
+/* Classic theme colours. Token themes get theirs from themes/css/fw-base.css
+   (Shared tool components) using --fw-sec-*, --fw-group-row, --fw-shadow-raised.
+   body stays unscoped on purpose: bootstrap/header.php's later body rule has
+   always overridden it, and scoping would raise its specificity and change
+   the classic background. Token themes override it anyway. */
+body { background-color:#D9D9D9}
+html:not([data-fw-theme]) .perfect {background-color:green;}
+html:not([data-fw-theme]) td.lowsec {background-color:orange !important}
+html:not([data-fw-theme]) td.highsec {background-color:lightgreen !important}
+html:not([data-fw-theme]) td.nullsec{background-color:crimson !important}
+html:not([data-fw-theme]) tr.group, html:not([data-fw-theme]) tr.group:hover {  background-color: #ddd !important;  }
+html:not([data-fw-theme]) .makeme { box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);}

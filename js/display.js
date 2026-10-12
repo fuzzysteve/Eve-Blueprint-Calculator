@@ -220,14 +220,45 @@ $("#mainbody").hide();
     });
 
 
+    // Floating prices box: starts top-right (inline style in display.tpl),
+    // remembers where it was dragged, and is kept inside the window.
     $(function() {
-                $( "#prices" ).draggable({ handle: "#priceheader" }).mouseup(function(){
-                    var coords=[];
-                    var coord = $(this).position();
-                    var item={ coordTop:  Math.floor(coord.top), coordLeft: Math.floor(coord.left),width: $("#prices").css('width') };
-                    coords.push(item);
-                    //createCookie("pricepos",JSON.stringify(coords),700);
-                 });
+                var PRICEPOS_KEY = 'blueprintPricePos';
+                var $prices = $("#prices");
+
+                function clampPrices() {
+                    var pos = $prices.position();
+                    var maxLeft = Math.max(0, $(window).width() - $prices.outerWidth() - 16);
+                    $prices.css({
+                        left: Math.min(Math.max(0, pos.left), maxLeft),
+                        top: Math.max(0, pos.top)
+                    });
+                }
+
+                // Switch from right-anchored to left/top so dragging doesn't stretch it.
+                $prices.css({ left: $prices.position().left, right: 'auto' });
+                try {
+                    var saved = JSON.parse(localStorage.getItem(PRICEPOS_KEY));
+                    if (saved && typeof saved.top === 'number' && typeof saved.left === 'number') {
+                        $prices.css({ top: saved.top, left: saved.left });
+                    }
+                } catch (e) { /* storage unavailable or bad value: keep the default */ }
+                clampPrices();
+
+                $prices.draggable({
+                    handle: "#priceheader",
+                    stop: function(event, ui) {
+                        clampPrices();
+                        try {
+                            var pos = $prices.position();
+                            localStorage.setItem(PRICEPOS_KEY, JSON.stringify({ top: Math.floor(pos.top), left: Math.floor(pos.left) }));
+                        } catch (e) { /* storage unavailable */ }
+                    }
+                });
+                // Expanding widens the box; pull it back in if it now runs off the edge.
+                $("#pricedetail").on('shown.bs.collapse', clampPrices);
+                // Web fonts can widen the header after the first clamp.
+                $(window).on('resize load', clampPrices);
     });
 
     $(function() {
